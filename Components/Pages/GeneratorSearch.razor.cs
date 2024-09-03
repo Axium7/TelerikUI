@@ -13,8 +13,6 @@ namespace TelerikUI.Components.Pages
         private bool blnError = false;
         private TelerikTextBox TxtFirstChars { get; set; }
 
-        
-
         private async Task FetchGenerators()
         {
             blnFetching = true;
@@ -55,7 +53,16 @@ namespace TelerikUI.Components.Pages
         async Task DeleteFirstChars()
         {
             strFirstChars = string.Empty;
+            lstGenerators = null;
             await TxtFirstChars.FocusAsync();
+        }
+
+        private async Task EnterTabFetchFirstChars(KeyboardEventArgs e)
+        {
+            if (e.Key == "Enter" || e.Key == "Tab")
+            {
+                await FetchGenerators();
+            }
         }
 
         /********************************* Configurations Methods ********************************/

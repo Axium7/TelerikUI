@@ -7,20 +7,25 @@
 
 <h3>Find Generator(s)</h3>
 
-@* Make upper case immediately.  Cannot Bind with Value Changed *@
+@* Make upper case immediately.  Cannot Bind with Value Changed
 <TelerikTextBox @ref="@TxtFirstChars" 
                 Value="@strFirstChars"
                 ValueChanged="SetUpperValueChanged"
                 Placeholder="Enter First Characters of Generator Name"
                 MaxLength="20" Width="20ch">
-</TelerikTextBox>
+</TelerikTextBox> *@
 
-@* Make upper after exit.  Cannot Bind with Value Changed
-<TelerikTextBox @bind-Value="@strFirstChars"
+@* <input type="text" @bind="@strFirstChars" @onkeyup="EnterTabFetchFirstChars" MaxLength="20" Width="20ch  /> *@
+
+@* Make upper after exit. *@
+<span @onkeyup="EnterTabFetchFirstChars">
+<TelerikTextBox @ref="@TxtFirstChars"
+                @bind-Value="@strFirstChars"
                 OnChange="SetUpperOnChange"
                 Placeholder="Enter First Characters of Generator Name"
                 MaxLength="20" Width="20ch">
-</TelerikTextBox> *@
+</TelerikTextBox>
+</span>
 
 <TelerikButton OnClick="FetchGenerators">
     Get Generators
@@ -39,7 +44,9 @@
     <TelerikGrid Data="@lstGenerators"
                  Pageable="true"
                  Sortable="true"
-                 FilterMode="@GridFilterMode.FilterRow">
+                 FilterMode="GridFilterMode.FilterMenu"
+                 Resizable="true"
+                 Reorderable="true">
         <GridColumns>
             <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" />
             <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" />
