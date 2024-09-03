@@ -12,7 +12,7 @@
              OnCreate="@CreateHandler"
              OnCancel="@CancelHandler">
     <GridToolBarTemplate>
-        <GridCommandButton Command="Add" Icon="@SvgIcon.Plus">Add Employee</GridCommandButton>
+        <GridCommandButton Command="Add" Icon="@SvgIcon.Plus" Class="green-button">Add Employee</GridCommandButton>
     </GridToolBarTemplate>
     <GridColumns>
         <GridColumn Field=@nameof(SampleData.ID) Title="ID" Editable="false" />
