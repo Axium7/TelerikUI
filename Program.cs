@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TelerikUI.Data;
+using TelerikUI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddTelerikBlazor();
 builder.Services.AddDbContext<AppDBContext>();
+builder.Services.AddScoped<SerOHRDb>();
 
 var app = builder.Build();
 
