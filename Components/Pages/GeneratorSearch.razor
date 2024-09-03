@@ -1,7 +1,9 @@
 ﻿@page "/GeneratorSearch"
-@inject OHR.Services.ServiceGenerator ServiceGenerator
+@inject SerOHRDb serOHRDb
+
+@* This library is for Lists *@
 @using System.Collections.Generic
-@using OHR.Models
+
 
 <h3>Find Multiple Generators</h3>
 
@@ -35,7 +37,7 @@ else if (hasError)
 
         try
         {
-            multipleGenerators = await ServiceGenerator.GetMultipleGeneratorAsync(inputFirstCharacters);
+            multipleGenerators = await serOHRDb.GetMultipleGeneratorAsync(inputFirstCharacters);
         }
         catch (Exception)
         {

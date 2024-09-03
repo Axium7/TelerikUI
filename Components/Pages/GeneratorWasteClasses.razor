@@ -1,7 +1,7 @@
 ﻿@page "/GeneratorWasteClasses"
-@inject OHR.Services.ServiceGenerator ServiceGenerator
+@inject SerOHRDb serOHRDb
 @using System.Collections.Generic
-@using OHR.Models
+
 
 <h3>Find Generator by Waste Num</h3>
 
@@ -36,7 +36,7 @@ else if (hasError)
 
         try
         {
-            generatorWasteClasses = await ServiceGenerator.GetGeneratorWasteClassesAsync(inputWasteNum);
+            generatorWasteClasses = await serOHRDb.GetGeneratorWasteClassesAsync(inputWasteNum);
         }
         catch (Exception)
         {

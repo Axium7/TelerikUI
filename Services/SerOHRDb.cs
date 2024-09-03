@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace TelerikUI.Services
 {
-    public class ServiceGenerator
+    public class SerOHRDb
     {
         private readonly AppDBContext _dbContext;
 
         // Constructor for dependency injection
-        public ServiceGenerator(AppDBContext dbContext)
+        public SerOHRDb(AppDBContext dbContext)
         {
             _dbContext = dbContext;
         }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace OHR.Models;
+﻿
 
 public partial class ModvGeneratorWasteClass
 {
