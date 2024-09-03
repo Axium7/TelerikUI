@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OHR.Data;
-using OHR.Models;
+using TelerikUI.Data;
+using TelerikUI.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OHR.Services
+namespace TelerikUI.Services
 {
     public class ServiceGenerator
     {

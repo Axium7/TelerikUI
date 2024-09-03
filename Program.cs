@@ -7,6 +7,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddTelerikBlazor();
+builder.Services.AddDbContext();
 
 var app = builder.Build();
 

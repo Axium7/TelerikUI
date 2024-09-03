@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using OHR.Models;
+using TelerikUI.Models;
 
-namespace OHR.Data
+namespace TelerikUI.Data
 {
     public class AppDBContext : DbContext
     {
