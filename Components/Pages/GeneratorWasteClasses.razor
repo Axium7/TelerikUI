@@ -1,0 +1,50 @@
+﻿@page "/GeneratorWasteClasses"
+@inject OHR.Services.ServiceGenerator ServiceGenerator
+@using System.Collections.Generic
+@using OHR.Models
+
+<h3>Find Generator by Waste Num</h3>
+
+<input type="number" @bind="inputWasteNum" placeholder="Enter Waste Number" />
+<button @onclick="FetchGenerator">Get Generator</button>
+
+@if (generatorWasteClasses != null)
+{
+
+    <OHR.RazorComponents.CompGeneratorWasteClasses GeneratorWasteClasses="generatorWasteClasses" />
+}
+else if (isFetching)
+{
+    <p>Loading...</p>
+}
+else if (hasError)
+{
+    <p>Error fetching generator. Please try again.</p>
+}
+
+@code {
+    private int inputWasteNum;
+    private List<ModvGeneratorWasteClass> generatorWasteClasses;
+    private bool isFetching = false;
+    private bool hasError = false;
+
+    private async Task FetchGenerator()
+    {
+        isFetching = true;
+        hasError = false;
+        generatorWasteClasses = null;
+
+        try
+        {
+            generatorWasteClasses = await ServiceGenerator.GetGeneratorWasteClassesAsync(inputWasteNum);
+        }
+        catch (Exception)
+        {
+            hasError = true;
+        }
+        finally
+        {
+            isFetching = false;
+        }
+    }
+}

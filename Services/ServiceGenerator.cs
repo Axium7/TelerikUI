@@ -1,0 +1,54 @@
+﻿using Microsoft.EntityFrameworkCore;
+using OHR.Data;
+using OHR.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace OHR.Services
+{
+    public class ServiceGenerator
+    {
+        private readonly AppDBContext _dbContext;
+
+        // Constructor for dependency injection
+        public ServiceGenerator(AppDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        // Get Record by ID
+        public async Task<ModtblGenerator> GetGeneratorByIdAsync(int id)
+        {
+            return await _dbContext.Generators.FindAsync(id);
+        }
+
+        // Get All Records that start with specific characters
+        public async Task<List<ModtblGenerator>> GetMultipleGeneratorAsync(string firstCharacters)
+        {
+            return await _dbContext.Generators
+                                   .Where(g => g.GenName.StartsWith(firstCharacters))
+                                   .ToListAsync();
+        }
+
+        public async Task GeneratorDeleteByIDAsync(int id)
+        {
+            var generator = await _dbContext.Generators.FindAsync(id);
+            if (generator != null)
+            {
+                _dbContext.Generators.Remove(generator);
+                await _dbContext.SaveChangesAsync();
+            }
+
+        }
+
+        // Get All Waste Classes Records
+        public async Task<List<ModvGeneratorWasteClass>> GetGeneratorWasteClassesAsync(int WasteNum)
+        {
+            return await _dbContext.GeneratorWasteClasses
+                .Where(g => g.WasteNum == WasteNum)
+                .ToListAsync();
+
+        }
+    }
+}
