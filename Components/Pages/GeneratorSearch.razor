@@ -7,45 +7,62 @@
 
 <h3>Find Multiple Generators</h3>
 
-<input type="text" @bind="inputFirstCharacters" placeholder="Enter First Characters of Generator Name" />
-<button @onclick="FetchGenerators">Get Generator</button>
+<input type="text" @bind="strFirstChars" placeholder="Enter First Characters of Generator Name" />
+<button @onclick="FetchGenerators">Get Generators</button>
 
-@if (multipleGenerators != null)
-{
-    <OHR.RazorComponents.CompGeneratorsMultiple MultipleGenerators="multipleGenerators" />
+<br />
+<br />
+
+@if (lstGenerators != null)
+{   
+    <TelerikGrid Data="@lstGenerators"
+                 Pageable="true"
+                 Sortable="true"
+                 FilterMode="@GridFilterMode.FilterRow">
+        <GridColumns>
+            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Generator Number" />
+            <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" />
+            <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" />
+            <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" />
+            <GridColumn Field="@nameof(ModtblGenerator.Province)" Title="Province" />
+            <GridColumn Field="@nameof(ModtblGenerator.Country)" Title="Country" />
+            <GridColumn Field="@nameof(ModtblGenerator.PostalCode)" Title="Postal Code" />
+            <GridColumn Field="@nameof(ModtblGenerator.WasteClasses)" Title="Waste Classes" />
+        </GridColumns>
+    </TelerikGrid>
 }
-else if (isFetching)
+else if (blnFetching)
 {
     <p>Loading...</p>
 }
-else if (hasError)
+else if (blnError)
 {
-    <p>Error fetching generator. Please try again.</p>
+    <p>Error fetching Generators. Please try again.</p>
 }
 
 @code {
-    private string inputFirstCharacters;
-    private List<ModtblGenerator> multipleGenerators;
-    private bool isFetching = false;
-    private bool hasError = false;
+    private string strFirstChars;
+    private List<ModtblGenerator> lstGenerators;
+    private bool blnFetching = false;
+    private bool blnError = false;
 
     private async Task FetchGenerators()
     {
-        isFetching = true;
-        hasError = false;
-        multipleGenerators = null;
+        blnFetching = true;
+        blnError = false;
+        lstGenerators = null;
 
         try
         {
-            multipleGenerators = await serOHRDb.GetMultipleGeneratorAsync(inputFirstCharacters);
+            lstGenerators = await serOHRDb.GetMultipleGeneratorAsync(strFirstChars);
         }
         catch (Exception)
         {
-            hasError = true;
+            blnError = true;
         }
         finally
         {
-            isFetching = false;
+            blnFetching = false;
         }
     }
 }
