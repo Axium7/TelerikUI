@@ -1,0 +1,135 @@
+﻿@page "/TelerikGridPractice"
+
+<PageTitle>Telerik Grid Practice</PageTitle>
+@using System.ComponentModel.DataAnnotations
+
+<TelerikGrid Data=@MyData
+             EditMode="@GridEditMode.Inline"
+             Pageable="true"
+             Height="400px"
+             OnUpdate="@UpdateHandler"
+             OnDelete="@DeleteHandler"
+             OnCreate="@CreateHandler"
+             OnCancel="@CancelHandler">
+    <GridToolBarTemplate>
+        <GridCommandButton Command="Add" Icon="@SvgIcon.Plus">Add Employee</GridCommandButton>
+    </GridToolBarTemplate>
+    <GridColumns>
+        <GridColumn Field=@nameof(SampleData.ID) Title="ID" Editable="false" />
+        <GridColumn Field=@nameof(SampleData.Name)
+                    EditorType="@GridEditorType.TextArea"
+                    Title="Name" />
+        <GridCommandColumn>
+            <GridCommandButton Command="Save" Icon="@SvgIcon.Save" ShowInEdit="true">Update</GridCommandButton>
+            <GridCommandButton Command="Edit" Icon="@SvgIcon.Pencil">Edit</GridCommandButton>
+            <GridCommandButton Command="Delete" Icon="@SvgIcon.Trash">Delete</GridCommandButton>
+            <GridCommandButton Command="Cancel" Icon="@SvgIcon.Cancel" ShowInEdit="true">Cancel</GridCommandButton>
+        </GridCommandColumn>
+    </GridColumns>
+</TelerikGrid>
+
+
+@code {
+    async Task UpdateHandler(GridCommandEventArgs args)
+    {
+        SampleData item = (SampleData)args.Item;
+
+        await MyService.Update(item);
+
+        await GetGridData();
+    }
+
+    async Task DeleteHandler(GridCommandEventArgs args)
+    {
+        SampleData item = (SampleData)args.Item;
+
+        await MyService.Delete(item);
+
+        await GetGridData();
+    }
+
+    async Task CreateHandler(GridCommandEventArgs args)
+    {
+        SampleData item = (SampleData)args.Item;
+
+        await MyService.Create(item);
+
+        await GetGridData();
+    }
+
+    async Task CancelHandler(GridCommandEventArgs args)
+    {
+        SampleData item = (SampleData)args.Item;
+
+        await Task.Delay(1000); //simulate actual long running async operation
+    }
+
+    public class SampleData
+    {
+        public int ID { get; set; }
+        [Required]
+        public string Name { get; set; }
+    }
+
+    List<SampleData> MyData { get; set; }
+
+    async Task GetGridData()
+    {
+        MyData = await MyService.Read();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetGridData();
+    }
+
+    public static class MyService
+    {
+        private static List<SampleData> _data { get; set; } = new List<SampleData>();
+
+        public static async Task Create(SampleData itemToInsert)
+        {
+            await Task.Delay(1000); // simulate actual long running async operation
+
+            itemToInsert.ID = _data.Count + 1;
+            _data.Insert(0, itemToInsert);
+        }
+
+        public static async Task<List<SampleData>> Read()
+        {
+            await Task.Delay(1000); // simulate actual long running async operation
+
+            if (_data.Count < 1)
+            {
+                for (int i = 1; i < 50; i++)
+                {
+                    _data.Add(new SampleData()
+                        {
+                            ID = i,
+                            Name = "Name " + i.ToString()
+                        });
+                }
+            }
+
+            return await Task.FromResult(_data);
+        }
+
+        public static async Task Update(SampleData itemToUpdate)
+        {
+            await Task.Delay(1000); // simulate actual long running async operation
+
+            var index = _data.FindIndex(i => i.ID == itemToUpdate.ID);
+            if (index != -1)
+            {
+                _data[index] = itemToUpdate;
+            }
+        }
+
+        public static async Task Delete(SampleData itemToDelete)
+        {
+            await Task.Delay(1000); // simulate actual long running async operation
+
+            _data.Remove(itemToDelete);
+        }
+    }
+}
