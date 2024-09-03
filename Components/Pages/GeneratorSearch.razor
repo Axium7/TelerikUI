@@ -1,0 +1,49 @@
+﻿@page "/GeneratorSearch"
+@inject OHR.Services.ServiceGenerator ServiceGenerator
+@using System.Collections.Generic
+@using OHR.Models
+
+<h3>Find Multiple Generators</h3>
+
+<input type="text" @bind="inputFirstCharacters" placeholder="Enter First Characters of Generator Name" />
+<button @onclick="FetchGenerators">Get Generator</button>
+
+@if (multipleGenerators != null)
+{
+    <OHR.RazorComponents.CompGeneratorsMultiple MultipleGenerators="multipleGenerators" />
+}
+else if (isFetching)
+{
+    <p>Loading...</p>
+}
+else if (hasError)
+{
+    <p>Error fetching generator. Please try again.</p>
+}
+
+@code {
+    private string inputFirstCharacters;
+    private List<ModtblGenerator> multipleGenerators;
+    private bool isFetching = false;
+    private bool hasError = false;
+
+    private async Task FetchGenerators()
+    {
+        isFetching = true;
+        hasError = false;
+        multipleGenerators = null;
+
+        try
+        {
+            multipleGenerators = await ServiceGenerator.GetMultipleGeneratorAsync(inputFirstCharacters);
+        }
+        catch (Exception)
+        {
+            hasError = true;
+        }
+        finally
+        {
+            isFetching = false;
+        }
+    }
+}
