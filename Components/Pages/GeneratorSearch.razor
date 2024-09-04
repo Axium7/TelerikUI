@@ -39,11 +39,19 @@
         Sortable="true"
         FilterMode="GridFilterMode.FilterMenu"
         Resizable="true"
-        Reorderable="true"
-    >
+        Reorderable="true">
+
+        <GridToolBarTemplate>
+            <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
+            <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@ExportAllPages" />Export All Pages</label>
+        </GridToolBarTemplate>
+
+        <GridExport>
+            <GridExcelExport FileName="telerik-grid-export" AllPages="@ExportAllPages" />
+        </GridExport>
 
         <GridColumns>
-            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number">
+            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number"/>
             <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" /> 
             <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" />
             <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" />

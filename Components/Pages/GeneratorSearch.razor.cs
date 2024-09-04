@@ -9,12 +9,13 @@ namespace TelerikUI.Components.Pages
 {
     public partial class GeneratorSearch
     {
-        private string strFirstChars;
-        private List<ModtblGenerator> lstGenerators;
-        private bool blnFetching = false;
-        private bool blnError = false;
-        private TelerikTextBox TxtFirstChars { get; set; }
-        private TelerikGrid<ModtblGenerator> GridRef { get; set; }
+        string strFirstChars;
+        List<ModtblGenerator> lstGenerators;
+        bool ExportAllPages { get; set; }
+        bool blnFetching = false;
+        bool blnError = false;
+        TelerikTextBox TxtFirstChars { get; set; }
+        TelerikGrid<ModtblGenerator> GridRef { get; set; }
 
         private async Task FetchGenerators()
         {
