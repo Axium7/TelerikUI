@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Components.Web;
 using Telerik.Blazor.Components;
+using Telerik.Blazor.Components.Grid;
 using Telerik.SvgIcons;
 using TelerikUI.Models;
+using static TelerikUI.Components.Pages.GridPractice;
 
 namespace TelerikUI.Components.Pages
 {
@@ -12,6 +14,7 @@ namespace TelerikUI.Components.Pages
         private bool blnFetching = false;
         private bool blnError = false;
         private TelerikTextBox TxtFirstChars { get; set; }
+        private TelerikGrid<ModtblGenerator> GridRef { get; set; }
 
         private async Task FetchGenerators()
         {
@@ -22,6 +25,8 @@ namespace TelerikUI.Components.Pages
             try
             {
                 lstGenerators = await serOHRDb.GetMultipleGeneratorAsync(strFirstChars);
+                //await GridRef.AutoFitAllColumnsAsync();
+                StateHasChanged();
             }
             catch (Exception)
             {
@@ -31,6 +36,10 @@ namespace TelerikUI.Components.Pages
             {
                 blnFetching = false;
             }
+        }
+        private async Task AutoFitAllColumns()
+        {
+            await GridRef.AutoFitAllColumnsAsync();
         }
 
         void SetUpperOnChange()
