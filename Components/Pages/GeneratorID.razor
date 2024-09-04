@@ -1,0 +1,48 @@
+﻿@page "/GeneratorID"
+@inject SerOHRDatabase serOHRDatabase
+
+<h3>Find Generator by ID</h3>
+
+<input type="number" @bind="intID" placeholder="Enter Generator ID" />
+<button @onclick="FetchGenerator">Get Generator</button>
+
+@if (singleGenerator != null)
+{
+
+    <ComGeneratorSingle SingleGenerator="singleGenerator" />
+}
+else if (blnFetching)
+{
+    <p>Loading...</p>
+}
+else if (blnError)
+{
+    <p>Error fetching generator. Please try again.</p>
+}
+
+@code {
+    private int intID;
+    private ModtblGenerator singleGenerator;
+    private bool blnFetching = false;
+    private bool blnError = false;
+
+    private async Task FetchGenerator()
+    {
+        blnFetching = true;
+        blnError = false;
+        singleGenerator = null;
+
+        try
+        {
+            singleGenerator = await serOHRDatabase.GetGeneratorByIdAsync(intID);
+        }
+        catch (Exception)
+        {
+            blnError = true;
+        }
+        finally
+        {
+            blnFetching = false;
+        }
+    }
+}

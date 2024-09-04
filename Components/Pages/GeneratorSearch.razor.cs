@@ -24,7 +24,7 @@ namespace TelerikUI.Components.Pages
 
             try
             {
-                lstGenerators = await serOHRDb.GetMultipleGeneratorAsync(strFirstChars);
+                lstGenerators = await serOHRDatabase.GetMultipleGeneratorAsync(strFirstChars);
                 //await GridRef.AutoFitAllColumnsAsync();
                 StateHasChanged();
             }

@@ -21,7 +21,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddTelerikBlazor();
 builder.Services.AddDbContext<AppDBContext>();
-builder.Services.AddScoped<SerOHRDb>();
+builder.Services.AddScoped<SerOHRDatabase>();
 
 var app = builder.Build();
 

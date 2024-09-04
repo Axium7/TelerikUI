@@ -1,0 +1,38 @@
+﻿@using TelerikUI.Models
+
+@code {
+    [Parameter]
+    public ModtblGenerator SingleGenerator { get; set; }
+}
+
+<h3>Generator Details</h3>
+<form readonly>
+    <div style="width: 100%;">
+        <div style="display: flex; flex-wrap: wrap;">
+            <div style="flex: 1 1 50%;">
+                <strong>Gen #:</strong> @SingleGenerator.GenNum
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>Gen Name:</strong> @SingleGenerator.GenName
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>Street:</strong> @SingleGenerator.Street
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>City:</strong> @SingleGenerator.City
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>Province:</strong> @SingleGenerator.Province
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>Country:</strong> @SingleGenerator.Country
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>Postal Code:</strong> @SingleGenerator.PostalCode
+            </div>
+            <div style="flex: 1 1 50%;">
+                <strong>Waste Class:</strong> @SingleGenerator.WasteClasses
+            </div>
+        </div>
+    </div>
+</form>

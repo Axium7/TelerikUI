@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject SerOHRDb serOHRDb
+@inject SerOHRDatabase serOHRDatabase
 @using Microsoft.AspNetCore.Components.Web
 @* This library is for Lists *@
 @using System.Collections.Generic
@@ -21,6 +21,7 @@
     Get Generators
 </TelerikButton>
 
+@* Enable Delete Button if there are characters to delete *@
 <TelerikButton Icon="@FontIcon.Cancel" Enabled="@(!string.IsNullOrEmpty(strFirstChars))" 
     OnClick="DeleteFirstChars">
 </TelerikButton>
@@ -42,10 +43,8 @@
     >
 
         <GridColumns>
-            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" />
-            <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" TextAlign="@ColumnTextAlign.Right"
-                        HeaderClass="k-justify-content-center k-state-success demo-font-weight-bold">
-            </GridColumn>
+            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number">
+            <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" /> 
             <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" />
             <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" />
             <GridColumn Field="@nameof(ModtblGenerator.Province)" Title="Province" />

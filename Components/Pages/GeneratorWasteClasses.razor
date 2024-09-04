@@ -1,5 +1,5 @@
 ﻿@page "/GenWasteClasses"
-@inject SerOHRDb serOHRDb
+@inject SerOHRDatabase serOHRDatabase
 @using System.Collections.Generic
 
 
@@ -36,7 +36,7 @@ else if (hasError)
 
         try
         {
-            generatorWasteClasses = await serOHRDb.GetGeneratorWasteClassesAsync(inputWasteNum);
+            generatorWasteClasses = await serOHRDatabase.GetGeneratorWasteClassesAsync(inputWasteNum);
         }
         catch (Exception)
         {
