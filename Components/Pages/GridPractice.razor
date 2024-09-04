@@ -1,40 +1,157 @@
-﻿@page "/TelerikPractice"
+﻿@* @using TelerikBlazorDemos.DataAccess.Services
+@using TelerikBlazorDemos.DataAccess.Dto
+@page "/grid/cell-formatting"
 
-<PageTitle>Telerik Grid Practice</PageTitle>
-@using System.ComponentModel.DataAnnotations
+@inject HttpClient http
 
-@* Add a keyboard event handler on the parent element to capture the events *@
-
-<span @onkeypress="@KeyHandlerTb" @onkeydown="@KeyHandlerTb">
-    <TelerikTextBox DebounceDelay="0" @bind-Value="@TbValue"></TelerikTextBox>
-</span>
-
-<span @onkeypress="@KeyHandlerNtb" @onkeydown="@KeyHandlerNtb">
-    <TelerikNumericTextBox @bind-Value="@NtbValue"></TelerikNumericTextBox>
-</span>
-
-<br />
-@logger
+<TelerikGrid Data="@GridData"
+             Width="100%"
+             Sortable="true"
+             Reorderable="true"
+             Resizable="true"
+             Pageable="true"
+             OnRowRender="@OnRowRenderHandler">
+    <GridColumns>
+        <GridColumn Field=@nameof(ProductDto.ProductId) Width="80px" Title="ID" />
+        <GridColumn Field=@nameof(ProductDto.ProductName) Width="200px" Title="Product Name" />
+        <GridColumn Field=@nameof(ProductDto.UnitPrice) Width="140px" Title="Price" DisplayFormat="{0:C2}" TextAlign="@ColumnTextAlign.Right" HeaderClass="k-justify-content-center k-state-success demo-font-weight-bold" />
+        <GridColumn Field=@nameof(ProductDto.Discontinued) Width="160px" Title="In Stock" OnCellRender="@OnCellRenderHandler" TextAlign="@ColumnTextAlign.Center" HeaderClass="k-justify-content-center demo-font-weight-bold">
+            <Template>
+                @{
+                    var discontinued = (context as ProductDto).Discontinued;
+                }
+                @(discontinued ?? false ? "Not Available" : "Available")
+            </Template>
+        </GridColumn>
+        <GridColumn Field=@nameof(ProductDto.UnitsInStock) Width="160px" Title="Units" />
+        <GridColumn Field=@nameof(ProductDto.QuantityPerUnit) Width="210px" Title="Quantity per unit" />
+    </GridColumns>
+</TelerikGrid>
 
 @code {
-    MarkupString logger { get; set; }
-    string TbValue { get; set; } = "lorem ipsum";
-    int NtbValue { get; set; } = 123;
-
-    void LogEvent(string evt)
+    private ProductService _productService;
+    private ProductService ProductService
     {
-        logger = new MarkupString($"{logger}{evt} on {DateTime.Now.ToLongTimeString()}<br />");
+        get
+        {
+            if (_productService == null)
+            {
+                _productService = new ProductService(http);
+            }
+
+            return _productService;
+        }
+    }
+    public void OnCellRenderHandler(GridCellRenderEventArgs args)
+    {
+        // if item is not discontinued, add available class
+        args.Class = (bool)args.Value ? string.Empty : "available";
     }
 
-    void KeyHandlerTb(KeyboardEventArgs e)
+    public void OnRowRenderHandler(GridRowRenderEventArgs args)
     {
-        string evtInfo = $"Textbox: {e.Type}, key: {e.Key}";
-        LogEvent(evtInfo);
+        ProductDto item = args.Item as ProductDto;
+        args.Class = item.Discontinued ?? false ? "notavailable" : "";
     }
 
-    void KeyHandlerNtb(KeyboardEventArgs e)
+    public IEnumerable<ProductDto> GridData { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        string evtInfo = $"Numeric: {e.Type}, key: {e.Key}";
-        LogEvent(evtInfo);
+        GridData = await ProductService.GetProducts();
     }
 }
+
+<style>
+    .available {
+        color: green;
+        font-weight: bold !important;
+    }
+
+    .notavailable {
+        color: red !important;
+        font-weight: bold;
+        opacity: 0.7;
+    }
+
+    .demo-font-weight-bold {
+        font-weight: 700 !important;
+    }
+</style>
+
+<style>
+    .box {
+        margin: 4.5em 7.5em;
+        padding: 3em;
+        background-color: rgba(20,53,80,0.038);
+        border: 1px solid rgba(20,53,80,0.05);
+    }
+
+    .demo-section {
+        margin: 0 auto;
+        padding: 3em;
+        border: 1px solid rgba(20,53,80,0.14);
+        box-shadow: 0 1px 2px 1px rgba(0,0,0,.08), 0 3px 6px rgba(0,0,0,.08);
+    }
+
+    .auto {
+        max-width: max-content;
+    }
+
+    .demo-section:not(.wide):not(.auto),
+    .box:not(.wide):not(.auto) {
+        max-width: 500px;
+    }
+
+    .box:after,
+    .demo-section:after {
+        content: "; display: block;
+        clear: both;
+        height: 0;
+    }
+
+    .box {
+        margin: 4.5em auto;
+    }
+
+        .box:first-child {
+            margin-top: 0;
+        }
+
+    .center {
+        text-align: center;
+    }
+
+    .demo-section.editor {
+        max-width: 100%;
+        border: none;
+    }
+
+    .demo-alert {
+        font: normal 18px "Metric";
+        border-radius: 2px;
+        margin: 20px auto 40px auto;
+        padding: 20px;
+        border-left: 4px solid;
+    }
+
+    .demo-alert-success {
+        border-left-color: rgb(55,180,0);
+        background: rgba(55,180,0, 0.1);
+    }
+
+    .demo-alert-info {
+        border-left-color: rgb(83,146,228);
+        background: rgba(83,146,228, 0.1);
+    }
+
+    .demo-alert-error {
+        border-left-color: rgb(243, 23, 0);
+        background: rgba(243, 23, 0, 0.1);
+    }
+
+    .demo-alert-warning {
+        border-left-color: rgb(255, 192, 0);
+        background: rgba(255, 192, 0, 0.1);
+    }
+</style> *@
