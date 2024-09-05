@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Components.Web;
 using Telerik.Blazor.Components;
-using Telerik.Blazor.Components.Grid;
-using Telerik.SvgIcons;
 using TelerikUI.Models;
-using static TelerikUI.Components.Pages.GridPractice;
 
 namespace TelerikUI.Components.Pages
 {
@@ -11,13 +8,10 @@ namespace TelerikUI.Components.Pages
     {
         List<ModtblGenerator> lstGenerators;
         string strFirstChars;
-        string strExcelFileName="excelfile";
-        bool blnExportAllPages = true;
         bool blnFetching = false;
         bool blnError = false;
 
         TelerikTextBox TxtFirstChars { get; set; }
-        TelerikGrid<ModtblGenerator> GridRef { get; set; }
 
         private async Task FetchGenerators()
         {
@@ -40,10 +34,7 @@ namespace TelerikUI.Components.Pages
                 blnFetching = false;
             }
         }
-        private async Task AutoFitAllColumns()
-        {
-            await GridRef.AutoFitAllColumnsAsync();
-        }
+        
 
         void SetUpperOnChange()
         {
@@ -53,15 +44,6 @@ namespace TelerikUI.Components.Pages
                 StateHasChanged();
             }
         }
-        void SetUpperValueChanged(string strUserInput)
-        {
-            if (strUserInput != null)
-            {
-                strFirstChars = strUserInput.ToUpper();
-                StateHasChanged();
-            }
-        }
-
         async Task DeleteFirstChars()
         {
             strFirstChars = string.Empty;
@@ -77,10 +59,6 @@ namespace TelerikUI.Components.Pages
             }
         }
 
-        string CreateExcelFileName()
-        {
-            return  $"GeneratorSearch_{strFirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
-        }
         /********************************* Configurations Methods ********************************/
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
