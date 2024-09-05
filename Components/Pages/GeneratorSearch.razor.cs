@@ -11,8 +11,8 @@ namespace TelerikUI.Components.Pages
     {
         List<ModtblGenerator> lstGenerators;
         string strFirstChars;
-        string ExcelFileName;
-        bool ExportAllPages = true;
+        string strExcelFileName="excelfile";
+        bool blnExportAllPages = true;
         bool blnFetching = false;
         bool blnError = false;
 
@@ -77,9 +77,9 @@ namespace TelerikUI.Components.Pages
             }
         }
 
-        void FileNameExcel()
+        string CreateExcelFileName()
         {
-            ExcelFileName = $"GeneratorSearch_{strFirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
+            return  $"GeneratorSearch_{strFirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
         }
         /********************************* Configurations Methods ********************************/
 

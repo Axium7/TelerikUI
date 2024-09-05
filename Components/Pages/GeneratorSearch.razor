@@ -43,11 +43,12 @@
 
         <GridToolBarTemplate>
             <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
-            <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@ExportAllPages" />Export All Pages</label>
+            <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@blnExportAllPages" />Export All Pages</label>
         </GridToolBarTemplate>
 
         <GridExport>
-            <GridExcelExport FileName="telerik-grid-export" AllPages="@ExportAllPages" />
+            <GridExcelExport FileName="@strExcelFileName" AllPages="@blnExportAllPages"
+                OnBeforeExport="@(()=> { strExcelFileName=CreateExcelFileName(); } )" />
         </GridExport>
 
         <GridColumns>
