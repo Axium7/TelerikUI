@@ -1,5 +1,6 @@
 ﻿@page "/GeneratorID"
 @inject SerOHRDatabase serOHRDatabase
+@inject Globals serGlobals
 
 <h3>Find Generator by ID</h3>
 
@@ -9,7 +10,7 @@
 @if (singleGenerator != null)
 {
 
-    <ComGeneratorSingle SingleGenerator="singleGenerator" />
+    <ComGeneratorSingle Generator="singleGenerator" />
 }
 else if (blnFetching)
 {
@@ -21,12 +22,16 @@ else if (blnError)
 }
 
 @code {
-    private int intID;
-    private ModtblGenerator singleGenerator;
-    private bool blnFetching = false;
-    private bool blnError = false;
 
-    private async Task FetchGenerator()
+    [CascadingParameter]
+    private DialogFactory Dialogs { get; set; }
+
+    int intID;
+    ModtblGenerator singleGenerator;
+    bool blnFetching = false;
+    bool blnError = false;
+
+    async Task FetchGenerator()
     {
         blnFetching = true;
         blnError = false;
@@ -35,6 +40,10 @@ else if (blnError)
         try
         {
             singleGenerator = await serOHRDatabase.GetGeneratorByIdAsync(intID);
+            if (singleGenerator == null)
+            {
+                await Dialogs.AlertAsync($"Generator ID {intID} does not exist", serGlobals.strAppTitle);
+            }
         }
         catch (Exception)
         {

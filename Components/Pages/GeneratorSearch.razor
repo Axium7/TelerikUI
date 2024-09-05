@@ -25,14 +25,12 @@
                OnClick="DeleteFirstChars">
 </TelerikButton>
 
-
-
 <br />
 <br />
 
 @if (lstGenerators != null)
 {
-    <ComGenerators Generators="@lstGenerators" />
+    <ComGenerators Generators="@lstGenerators" FirstChars="strFirstChars"/>
 }
 else if (blnFetching)
 {

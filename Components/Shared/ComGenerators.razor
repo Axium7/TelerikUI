@@ -1,6 +1,4 @@
-﻿<TelerikButton OnClick="AutoFitAllColumns">AutoFit All Columns</TelerikButton>
-
-<TelerikGrid @ref="@GridRef"
+﻿<TelerikGrid @ref="@GridRef"
              Data="@Generators"
              Pageable="true"
              Sortable="true"
@@ -11,6 +9,8 @@
     <GridToolBarTemplate>
         <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
         <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@blnExportAllPages" />Export All Pages</label>
+        
+        <TelerikButton OnClick="AutoFitAllColumns" class="float-right">AutoFit All Columns</TelerikButton>
     </GridToolBarTemplate>
 
     <GridExport>
@@ -19,7 +19,16 @@
     </GridExport>
 
     <GridColumns>
-        <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" />
+         @* Gen Number is a HyperLink to the Generator Details Page *@
+
+        <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number"> 
+            @* <Template>
+                @{
+                    var generator = context as ModtblGenerator;
+                    @((MarkupString)$"<a href=\"http://mysite.com/employee/{generator.Id}\" target=\"_blank\">{employee.Name}</a>")
+                }
+            </Template> *@
+        </GridColumn>
         <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" />
         <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" />
         <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" />
@@ -36,7 +45,7 @@
     public List<ModtblGenerator> Generators { get; set; }
 
     [Parameter]
-    public string StrFirstChars { get; set; }
+    public string FirstChars { get; set; }
 
     TelerikGrid<ModtblGenerator> GridRef { get; set; }
     string strExcelFileName = "excelfile";
@@ -44,7 +53,7 @@
 
     string CreateExcelFileName()
     {
-        return $"GeneratorSearch_{StrFirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
+        return $"GeneratorSearch_{FirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
     }
 
     private async Task AutoFitAllColumns()

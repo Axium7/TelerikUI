@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.NetworkInformation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddTelerikBlazor();
 builder.Services.AddDbContext<AppDBContext>();
 builder.Services.AddScoped<SerOHRDatabase>();
+builder.Services.AddSingleton<Globals>();
 
 var app = builder.Build();
 

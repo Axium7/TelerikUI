@@ -2,7 +2,7 @@
 
 @code {
     [Parameter]
-    public ModtblGenerator SingleGenerator { get; set; }
+    public ModtblGenerator Generator { get; set; }
 }
 
 <h3>Generator Details</h3>
@@ -10,28 +10,28 @@
     <div style="width: 100%;">
         <div style="display: flex; flex-wrap: wrap;">
             <div style="flex: 1 1 50%;">
-                <strong>Gen #:</strong> @SingleGenerator.GenNum
+                <strong>Gen #:</strong> @Generator.GenNum
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>Gen Name:</strong> @SingleGenerator.GenName
+                <strong>Gen Name:</strong> @Generator.GenName
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>Street:</strong> @SingleGenerator.Street
+                <strong>Street:</strong> @Generator.Street
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>City:</strong> @SingleGenerator.City
+                <strong>City:</strong> @Generator.City
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>Province:</strong> @SingleGenerator.Province
+                <strong>Province:</strong> @Generator.Province
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>Country:</strong> @SingleGenerator.Country
+                <strong>Country:</strong> @Generator.Country
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>Postal Code:</strong> @SingleGenerator.PostalCode
+                <strong>Postal Code:</strong> @Generator.PostalCode
             </div>
             <div style="flex: 1 1 50%;">
-                <strong>Waste Class:</strong> @SingleGenerator.WasteClasses
+                <strong>Waste Class:</strong> @Generator.WasteClasses
             </div>
         </div>
     </div>
