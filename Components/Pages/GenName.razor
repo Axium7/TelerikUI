@@ -1,23 +1,29 @@
 ﻿@page "/"
 @inject SerOHRDatabase serOHRDatabase
+@using Telerik.DataSource
+@using Telerik.DataSource.Extensions
 
-<span @onkeyup="OnKeyUp">
+<span>
     Generator Name Search:
-    
-<TelerikMultiColumnComboBox Data="@lstGenerators"
-                            @bind-Value="@intSelectedGen"
+</span>
+<TelerikMultiColumnComboBox TItem="ModtblGenerator"
+                            TValue="int"
                             ValueField="@nameof(ModtblGenerator.Id)"
                             TextField="@nameof(ModtblGenerator.GenName)"
-                            Width="1000px"
-                            Placeholder="List updates after 3 typed characters"
-                            ClearButton="true" 
-                            Filterable="true">
+                            Filterable="false"
+                            @bind-Value="@intSelectedGenID"
+                            ItemHeight="@ItemHeight"
+                            ListHeight="@ListHeight"
+                            PageSize="@PageSize"
+                            ScrollMode="@DropDownScrollMode.Virtual"
+                            OnRead="@ReadItems"
+                            ValueMapper="@GetGeneratorRecord">
 
-    <MultiColumnComboBoxColumns >
+    <MultiColumnComboBoxColumns>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)"
                                    Title="Gen Name"
                                    HeaderClass="header"
-                                   Class ="genNameCell"
+                                   Class="genNameCell"
                                    Width="200px"></MultiColumnComboBoxColumn>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenNum)"
                                    Title="Gen Num"
@@ -41,27 +47,45 @@
                                    Width="150px"></MultiColumnComboBoxColumn>
     </MultiColumnComboBoxColumns>
 </TelerikMultiColumnComboBox>
-</span>
-<p>Selected product Id: @intSelectedGen</p>
+
+<p>Selected product Id: @intSelectedGenID</p>
 
 @code {
-    private List<ModtblGenerator> lstGenerators;
+    
+    List<ModtblGenerator> lstGenerators;
+    int intSelectedGenID;
 
-    private int intSelectedGen;
+    public string ListHeight { get; set; } = "260px";
+    public int ItemHeight { get; set; } = 28;
+    public int PageSize { get; set; } = 10;
+    
+    
+    protected async Task ReadItems(MultiColumnComboBoxReadEventArgs args)
+    {
+        await LoadData();
+       
+        var result = lstGenerators.ToDataSourceResult(args.Request);
+        args.Data = result.Data;
+        args.Total = result.Total;
+    }
 
-    private async Task OnKeyUp(KeyboardEventArgs e)
-	{
-        
-        if (e.Key.Length == 3)
+    // sample Read operation
+    private async Task LoadData()
+    {
+        if (lstGenerators == null)
         {
-            lstGenerators = await serOHRDatabase.GetAllGenFirst3CharsAsync(e.Key);
+            lstGenerators = await serOHRDatabase.GetAllGenerators();
         }
-	}
-    
+    }
+
+    protected Task<ModtblGenerator> GetGeneratorRecord(int intSelectedGenID)
+    {
+        return Task.FromResult(lstGenerators.FirstOrDefault(x => x.Id == intSelectedGenID));
+    }
 }
+
 <style>
-    
-    .header{
+    .header {
         font-weight: bold;
         color: black;
     }
@@ -70,5 +94,4 @@
         color: darkblue;
         font-weight: bolder;
     }
-
 </style>

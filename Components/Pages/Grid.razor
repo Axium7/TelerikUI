@@ -1,51 +1,71 @@
-﻿@page "/Grid"
+﻿@page "/"
+@using Telerik.DataSource
+@using Telerik.DataSource.Extensions
 
-<PageTitle>Telerik Grid</PageTitle>
-@* Telerik Blazor Grid with some common features *@
-
-<TelerikGrid Data="@GridData"
-             Pageable="true"
-             Sortable="true"
-             FilterMode="@GridFilterMode.FilterRow">
-    <GridColumns>
-        <GridColumn Field="Name" Title="Product Name" />
-        <GridColumn Field="Price" DisplayFormat="{0:C2}" />
-        <GridColumn Field="@nameof(Product.Released)" DisplayFormat="{0:D}" />
-        <GridColumn Field="@nameof(Product.Discontinued)" />
-    </GridColumns>
-</TelerikGrid>
+<TelerikMultiColumnComboBox TItem="Person"
+                            TValue="int"
+                            TextField="@TextField"
+                            ValueField="@ValueField"
+                            Filterable="false"
+                            @bind-Value="@SelectedValue"
+                            ItemHeight="@ItemHeight"
+                            ListHeight="@ListHeight"
+                            PageSize="@PageSize"
+                            ScrollMode="@DropDownScrollMode.Virtual"
+                            OnRead="@ReadItems"
+                            ValueMapper="@ConvertValue">
+    <MultiColumnComboBoxColumns>
+        <MultiColumnComboBoxColumn Field="@nameof(Person.EmployeeId)" Width="200px" />
+        <MultiColumnComboBoxColumn Field="@nameof(Person.Name)" Width="200px" />
+    </MultiColumnComboBoxColumns>
+</TelerikMultiColumnComboBox>
 
 @code {
-    private List<Product> GridData { get; set; }
+    public string TextField { get; set; } = "Name";
+    public string ValueField { get; set; } = "EmployeeId";
+    public string ListHeight { get; set; } = "260px";
+    public int ItemHeight { get; set; } = 28;
+    public int PageSize { get; set; } = 10;
+    public int SelectedValue { get; set; } = 145;
+    public string SelectedValueCustom { get; set; } = "Employee 145";
 
-    protected override void OnInitialized()
+    public List<Person> AllData { get; set; }
+
+    protected Task<Person> ConvertValue(int selectedValue)
     {
-        GridData = new List<Product>();
-
-        var rnd = new Random();
-
-        for (int i = 1; i <= 30; i++)
-        {
-            GridData.Add(new Product
-            {
-                Id = i,
-                Name = "Product name " + i,
-                Price = (decimal)(rnd.Next(1, 50) * 3.14),
-                Released = DateTime.Now.AddDays(-rnd.Next(1, 365)).AddYears(-rnd.Next(1, 10)).Date,
-                Discontinued = i % 5 == 0
-            });
-
-        }
-
-        base.OnInitialized();
+        return Task.FromResult(AllData.FirstOrDefault(x => selectedValue == x.EmployeeId));
     }
 
-    public class Product
+    protected Task<Person> ConvertValueCustom(string selectedValue)
     {
-        public int Id { get; set; }
+        return Task.FromResult(AllData.FirstOrDefault(x => selectedValue == x.Name));
+    }
+
+    protected async Task ReadItems(MultiColumnComboBoxReadEventArgs args)
+    {
+        await LoadData();
+
+        var result = AllData.ToDataSourceResult(args.Request);
+        args.Data = result.Data;
+        args.Total = result.Total;
+    }
+
+    // sample Read operation
+    private async Task LoadData()
+    {
+        if (AllData == null)
+        {
+            AllData = Enumerable.Range(0, 12345).Select(x => new Person
+                {
+                    EmployeeId = x,
+                    Name = $"Name {x}"
+                }).ToList();
+        }
+    }
+
+    public class Person
+    {
+        public int EmployeeId { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
-        public DateTime Released { get; set; }
-        public bool Discontinued { get; set; }
     }
 }

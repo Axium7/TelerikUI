@@ -49,6 +49,14 @@ namespace TelerikUI.Services
         }
 
         // Get All Generators
+        public async Task<List<ModtblGenerator>> GetAllGenerators()
+        {
+            return await _dbContext.Generators
+                                        .OrderBy(g => g.GenName)
+                                        .ToListAsync();
+        }
+
+        // Get All Generators that start with First3Chars
         public async Task<List<ModtblGenerator>> GetAllGenFirst3CharsAsync(string strFirst3chars)
         {
             return await _dbContext.Generators
