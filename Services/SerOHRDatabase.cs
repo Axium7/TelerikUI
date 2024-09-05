@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TelerikUI.Data;
 using TelerikUI.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TelerikUI.Services
 {
@@ -52,11 +49,12 @@ namespace TelerikUI.Services
         }
 
         // Get All Generators
-        public async Task<List<ModtblGenerator>> GetAllGeneratorsAsync()
+        public async Task<List<ModtblGenerator>> GetAllGenFirst3CharsAsync(string strFirst3chars)
         {
             return await _dbContext.Generators
-                                     .Take(1000)
-                                     .ToListAsync();
+                                        .OrderBy(g => g.GenName)
+                                        .Where(g => g.GenName.StartsWith(strFirst3chars))
+                                        .ToListAsync();
         }
     }
 }

@@ -1,0 +1,68 @@
+﻿@page "/"
+@inject SerOHRDatabase serOHRDatabase
+
+<span @onkeyup="OnKeyUp">
+    Generator Name Search
+<TelerikMultiColumnComboBox Data="@lstGenerators"
+                            @bind-Value="@intSelectedGen"
+                            ValueField="@nameof(ModtblGenerator.Id)"
+                            TextField="@nameof(ModtblGenerator.GenName)"
+                            Width="1000px">
+    <MultiColumnComboBoxColumns >
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)"
+                                   Title="Gen Name"
+                                   HeaderClass="header"
+                                   Class ="genNameCell"
+                                   Width="200px"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenNum)"
+                                   Title="Gen Num"
+                                   HeaderClass="header"
+                                   Width="150px"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.Street)"
+                                   Title="Street"
+                                   HeaderClass="header"
+                                   Width="200px"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.City)"
+                                   Title="City"
+                                   HeaderClass="header"
+                                   Width="150px"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.Province)"
+                                   Title="Province"
+                                   HeaderClass="header"
+                                   Width="150px"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.PostalCode)"
+                                   Title="PostalCode"
+                                   HeaderClass="header"
+                                   Width="150px"></MultiColumnComboBoxColumn>
+    </MultiColumnComboBoxColumns>
+</TelerikMultiColumnComboBox>
+</span>
+<p>Selected product Id: @intSelectedGen</p>
+
+@code {
+    private List<ModtblGenerator> lstGenerators;
+
+    private int intSelectedGen;
+
+    private async Task OnKeyUp(KeyboardEventArgs e)
+	{
+        if (e.Value.Length == 3)
+        {
+            lstGenerators = await serOHRDatabase.GetAllGenFirst3CharsAsync(e.Value);
+        }
+	}
+    
+}
+<style>
+    
+    .header{
+        font-weight: bold;
+        color: black;
+    }
+
+    .genNameCell {
+        color: darkblue;
+        font-weight: bolder;
+    }
+
+</style>

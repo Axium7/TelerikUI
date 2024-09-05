@@ -4,7 +4,7 @@ using TelerikUI.Models;
 
 namespace TelerikUI.Components.Pages
 {
-    public partial class GeneratorSearch
+    public partial class GenSearch
     {
         List<ModtblGenerator> lstGenerators;
         string strFirstChars = "aim";
