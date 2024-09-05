@@ -2,12 +2,17 @@
 @inject SerOHRDatabase serOHRDatabase
 
 <span @onkeyup="OnKeyUp">
-    Generator Name Search
+    Generator Name Search:
+    
 <TelerikMultiColumnComboBox Data="@lstGenerators"
                             @bind-Value="@intSelectedGen"
                             ValueField="@nameof(ModtblGenerator.Id)"
                             TextField="@nameof(ModtblGenerator.GenName)"
-                            Width="1000px">
+                            Width="1000px"
+                            Placeholder="List updates after 3 typed characters"
+                            ClearButton="true" 
+                            Filterable="true">
+
     <MultiColumnComboBoxColumns >
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)"
                                    Title="Gen Name"
@@ -46,9 +51,10 @@
 
     private async Task OnKeyUp(KeyboardEventArgs e)
 	{
-        if (e.Value.Length == 3)
+        
+        if (e.Key.Length == 3)
         {
-            lstGenerators = await serOHRDatabase.GetAllGenFirst3CharsAsync(e.Value);
+            lstGenerators = await serOHRDatabase.GetAllGenFirst3CharsAsync(e.Key);
         }
 	}
     
