@@ -9,11 +9,13 @@ namespace TelerikUI.Components.Pages
 {
     public partial class GeneratorSearch
     {
-        string strFirstChars;
         List<ModtblGenerator> lstGenerators;
-        bool ExportAllPages { get; set; }
+        string strFirstChars;
+        string ExcelFileName;
+        bool ExportAllPages = true;
         bool blnFetching = false;
         bool blnError = false;
+
         TelerikTextBox TxtFirstChars { get; set; }
         TelerikGrid<ModtblGenerator> GridRef { get; set; }
 
@@ -75,7 +77,12 @@ namespace TelerikUI.Components.Pages
             }
         }
 
+        void FileNameExcel()
+        {
+            ExcelFileName = $"GeneratorSearch_{strFirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
+        }
         /********************************* Configurations Methods ********************************/
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)

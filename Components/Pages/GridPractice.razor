@@ -1,157 +1,189 @@
-﻿@* @using TelerikBlazorDemos.DataAccess.Services
-@using TelerikBlazorDemos.DataAccess.Dto
-@page "/grid/cell-formatting"
-
-@inject HttpClient http
+﻿@page "/TelerikPractice"
+@using System.IO
+@using Telerik.Documents.SpreadsheetStreaming
 
 <TelerikGrid Data="@GridData"
-             Width="100%"
-             Sortable="true"
-             Reorderable="true"
-             Resizable="true"
-             Pageable="true"
-             OnRowRender="@OnRowRenderHandler">
+             Pageable="true">
+    <GridToolBarTemplate>
+        <GridCommandButton Command="ExcelExport">Export to Excel</GridCommandButton>
+        <label class="k-checkbox-label">
+            <TelerikCheckBox @bind-Value="@ExportAllPages" />
+            Export All Pages
+        </label>
+    </GridToolBarTemplate>
+
+    <GridExport>
+        <GridExcelExport FileName="telerik-grid-export"
+                         AllPages="@ExportAllPages"
+                         OnAfterExport="@OnExcelAfterExport">
+        </GridExcelExport>
+    </GridExport>
+
     <GridColumns>
-        <GridColumn Field=@nameof(ProductDto.ProductId) Width="80px" Title="ID" />
-        <GridColumn Field=@nameof(ProductDto.ProductName) Width="200px" Title="Product Name" />
-        <GridColumn Field=@nameof(ProductDto.UnitPrice) Width="140px" Title="Price" DisplayFormat="{0:C2}" TextAlign="@ColumnTextAlign.Right" HeaderClass="k-justify-content-center k-state-success demo-font-weight-bold" />
-        <GridColumn Field=@nameof(ProductDto.Discontinued) Width="160px" Title="In Stock" OnCellRender="@OnCellRenderHandler" TextAlign="@ColumnTextAlign.Center" HeaderClass="k-justify-content-center demo-font-weight-bold">
-            <Template>
-                @{
-                    var discontinued = (context as ProductDto).Discontinued;
-                }
-                @(discontinued ?? false ? "Not Available" : "Available")
-            </Template>
-        </GridColumn>
-        <GridColumn Field=@nameof(ProductDto.UnitsInStock) Width="160px" Title="Units" />
-        <GridColumn Field=@nameof(ProductDto.QuantityPerUnit) Width="210px" Title="Quantity per unit" />
+        <GridColumn Field="@nameof(SampleData.ProductId)" Title="ID" Width="100px" />
+        <GridColumn Field="@nameof(SampleData.ProductName)" Title="Product Name" Width="300px" />
+        <GridColumn Field="@nameof(SampleData.UnitsInStock)" Title="In stock" Width="100px" />
+        <GridColumn Field="@nameof(SampleData.Price)" Title="Unit Price" Width="200px" />
+        <GridColumn Field="@nameof(SampleData.Discontinued)" Title="Discontinued" Width="100px" />
+        <GridColumn Field="@nameof(SampleData.FirstReleaseDate)" Title="Release Date" Width="300px" />
     </GridColumns>
 </TelerikGrid>
 
 @code {
-    private ProductService _productService;
-    private ProductService ProductService
+    private List<SampleData> GridData { get; set; }
+
+    private bool ExportAllPages { get; set; }
+
+    private async Task OnExcelAfterExport(GridAfterExcelExportEventArgs args)
     {
-        get
-        {
-            if (_productService == null)
+        var bytes = args.Stream.ToArray();
+
+        var excelStream = new MemoryStream(bytes);
+
+        var export = new MemoryStream();
+
+        //define the desired styling - https://docs.telerik.com/devtools/document-processing/libraries/radspreadstreamprocessing/features/cell-styles
+        SpreadCellFormat markedCell = new SpreadCellFormat()
             {
-                _productService = new ProductService(http);
+                Fill = SpreadPatternFill.CreateSolidFill(new SpreadColor(230, 238, 223)),
+                IsBold = true
+            };
+
+        //import the stream to modify it and then export it -
+        //see https://docs.telerik.com/devtools/document-processing/libraries/radspreadstreamprocessing/model/workbook
+        using (excelStream)
+        {
+            using (IWorkbookImporter workBookImporter = SpreadImporter.CreateWorkbookImporter(SpreadDocumentFormat.Xlsx, excelStream))
+
+            using (IWorkbookExporter workbookExporter = SpreadExporter.CreateWorkbookExporter(SpreadDocumentFormat.Xlsx, export))
+            {
+                //loop through the sheets to copy their content
+                foreach (IWorksheetImporter worksheetImporter in workBookImporter.WorksheetImporters)
+                {
+                    using (var worksheetExporter = workbookExporter.CreateWorksheetExporter(worksheetImporter.Name))
+                    {
+                        //this sets fixed width to all columns.
+                        //If you need to autofit the content, use the CellContentSizeHelper -
+                        //https://docs.telerik.com/devtools/document-processing/libraries/radspreadstreamprocessing/features/text-measuring
+                        for (int i = 0; i < 5; i++)
+                        {
+                            var column = worksheetExporter.CreateColumnExporter();
+
+                            column.SetWidthInPixels(100);
+
+                            column.Dispose();
+                        }
+
+                        int lastRow = 0;
+
+                        //loop through the rows to copy their content
+                        foreach (IRowImporter rowImporter in worksheetImporter.Rows)
+                        {
+                            int rowDifference = rowImporter.RowIndex - lastRow;
+
+                            //this part ensures the proper cells order in case there are any empty rows
+                            if (rowDifference > 1)
+                            {
+                                worksheetExporter.SkipRows(rowDifference - 1);
+                            }
+
+                            int lastColumn = 0;
+
+                            using (var rowExporter = worksheetExporter.CreateRowExporter())
+                            {
+                                //loop through the cells to copy their content
+                                foreach (ICellImporter cellImporter in rowImporter.Cells)
+                                {
+                                    string value = cellImporter.Value;
+
+                                    if (string.IsNullOrEmpty(value))
+                                    {
+                                        continue;
+                                    }
+
+                                    var valueType = cellImporter.ValueType;
+
+
+                                    var importedFormat = new SpreadCellFormat();
+
+                                    if (cellImporter.Format != null)
+                                    {
+                                        importedFormat = cellImporter.Format;
+                                    }
+
+
+                                    int cellDifference = cellImporter.ColumnIndex - lastColumn;
+
+                                    //this part ensures the proper cells order in case there are any empty cells
+                                    if (cellDifference > 1)
+                                    {
+                                        rowExporter.SkipCells(cellDifference - 1);
+                                    }
+
+                                    //check the cell value to apply proper formatting
+                                    using (var cellExporter = rowExporter.CreateCellExporter())
+                                    {
+                                        switch (valueType)
+                                        {
+                                            case CellValueType.Boolean:
+                                                var boolValue = bool.Parse(value);
+                                                cellExporter.SetValue(boolValue);
+                                                break;
+                                            case CellValueType.Number:
+                                                var dateNumberValue = double.Parse(value);
+                                                cellExporter.SetFormat(importedFormat);
+                                                cellExporter.SetValue(dateNumberValue);
+                                                break;
+                                            case CellValueType.Error:
+                                            case CellValueType.Text:
+                                            case CellValueType.SharedString:
+                                            case CellValueType.RichText:
+                                                cellExporter.SetValue(value);
+                                                break;
+                                        }
+
+                                        //apply the defined style to the desired cells
+                                        if (cellImporter.RowIndex == 0)
+                                        {
+                                            cellExporter.SetFormat(markedCell);
+                                        }
+                                    }
+
+                                    lastColumn = cellImporter.ColumnIndex;
+                                }
+                            }
+
+                            lastRow = rowImporter.RowIndex;
+                        }
+                    }
+                }
             }
-
-            return _productService;
         }
-    }
-    public void OnCellRenderHandler(GridCellRenderEventArgs args)
-    {
-        // if item is not discontinued, add available class
-        args.Class = (bool)args.Value ? string.Empty : "available";
+
+        //pass the modified stream to the event arguments
+        args.Stream = export;
     }
 
-    public void OnRowRenderHandler(GridRowRenderEventArgs args)
+    protected override void OnInitialized()
     {
-        ProductDto item = args.Item as ProductDto;
-        args.Class = item.Discontinued ?? false ? "notavailable" : "";
+        GridData = Enumerable.Range(1, 100).Select(x => new SampleData
+            {
+                ProductId = x,
+                ProductName = "Product " + x,
+                UnitsInStock = x * 2,
+                Price = 3.14159m * x,
+                Discontinued = x % 4 == 0,
+                FirstReleaseDate = DateTime.Now.AddDays(-x)
+            }).ToList();
     }
 
-    public IEnumerable<ProductDto> GridData { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    public class SampleData
     {
-        GridData = await ProductService.GetProducts();
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public int UnitsInStock { get; set; }
+        public decimal Price { get; set; }
+        public bool Discontinued { get; set; }
+        public DateTime FirstReleaseDate { get; set; }
     }
 }
-
-<style>
-    .available {
-        color: green;
-        font-weight: bold !important;
-    }
-
-    .notavailable {
-        color: red !important;
-        font-weight: bold;
-        opacity: 0.7;
-    }
-
-    .demo-font-weight-bold {
-        font-weight: 700 !important;
-    }
-</style>
-
-<style>
-    .box {
-        margin: 4.5em 7.5em;
-        padding: 3em;
-        background-color: rgba(20,53,80,0.038);
-        border: 1px solid rgba(20,53,80,0.05);
-    }
-
-    .demo-section {
-        margin: 0 auto;
-        padding: 3em;
-        border: 1px solid rgba(20,53,80,0.14);
-        box-shadow: 0 1px 2px 1px rgba(0,0,0,.08), 0 3px 6px rgba(0,0,0,.08);
-    }
-
-    .auto {
-        max-width: max-content;
-    }
-
-    .demo-section:not(.wide):not(.auto),
-    .box:not(.wide):not(.auto) {
-        max-width: 500px;
-    }
-
-    .box:after,
-    .demo-section:after {
-        content: "; display: block;
-        clear: both;
-        height: 0;
-    }
-
-    .box {
-        margin: 4.5em auto;
-    }
-
-        .box:first-child {
-            margin-top: 0;
-        }
-
-    .center {
-        text-align: center;
-    }
-
-    .demo-section.editor {
-        max-width: 100%;
-        border: none;
-    }
-
-    .demo-alert {
-        font: normal 18px "Metric";
-        border-radius: 2px;
-        margin: 20px auto 40px auto;
-        padding: 20px;
-        border-left: 4px solid;
-    }
-
-    .demo-alert-success {
-        border-left-color: rgb(55,180,0);
-        background: rgba(55,180,0, 0.1);
-    }
-
-    .demo-alert-info {
-        border-left-color: rgb(83,146,228);
-        background: rgba(83,146,228, 0.1);
-    }
-
-    .demo-alert-error {
-        border-left-color: rgb(243, 23, 0);
-        background: rgba(243, 23, 0, 0.1);
-    }
-
-    .demo-alert-warning {
-        border-left-color: rgb(255, 192, 0);
-        background: rgba(255, 192, 0, 0.1);
-    }
-</style> *@

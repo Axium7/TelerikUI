@@ -47,7 +47,9 @@
         </GridToolBarTemplate>
 
         <GridExport>
-            <GridExcelExport FileName="telerik-grid-export" AllPages="@ExportAllPages" />
+            <GridExcelExport FileName="@ExcelFileName" 
+            AllPages="@ExportAllPages" 
+            OnBeforeExport="FileNameExcel"/>
         </GridExport>
 
         <GridColumns>
