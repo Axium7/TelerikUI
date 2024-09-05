@@ -7,7 +7,7 @@ namespace TelerikUI.Components.Pages
     public partial class GeneratorSearch
     {
         List<ModtblGenerator> lstGenerators;
-        string strFirstChars;
+        string strFirstChars = "aim";
         bool blnFetching = false;
         bool blnError = false;
 

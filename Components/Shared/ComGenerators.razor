@@ -1,4 +1,6 @@
-﻿<TelerikGrid @ref="@GridRef"
+﻿@using Telerik.DataSource;
+
+<TelerikGrid @ref="@GridRef"
              Data="@Generators"
              Pageable="true"
              Sortable="true"
@@ -10,7 +12,8 @@
         <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
         <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@blnExportAllPages" />Export All Pages</label>
         
-        <TelerikButton OnClick="AutoFitAllColumns" class="float-right">AutoFit All Columns</TelerikButton>
+        <TelerikButton OnClick="AutoFitAllColumns" >AutoFit All Columns</TelerikButton>
+        <TelerikButton ThemeColor="primary" OnClick="@ClearGridFilter">Clear Filters</TelerikButton>
     </GridToolBarTemplate>
 
     <GridExport>
@@ -48,6 +51,7 @@
     public string FirstChars { get; set; }
 
     TelerikGrid<ModtblGenerator> GridRef { get; set; }
+
     string strExcelFileName = "excelfile";
     bool blnExportAllPages = true;
 
@@ -59,6 +63,17 @@
     private async Task AutoFitAllColumns()
     {
         await GridRef.AutoFitAllColumnsAsync();
+    }
+
+    private async Task ClearGridFilter()
+    {
+        GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
+            {
+                //clears the filter list in the new Grid state
+                FilterDescriptors = new List<IFilterDescriptor>()
+            };
+
+        await GridRef.SetStateAsync(desiredState);
     }
 
 }
