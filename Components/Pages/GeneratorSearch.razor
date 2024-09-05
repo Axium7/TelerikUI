@@ -8,12 +8,12 @@
 
 @* Make upper after exit. *@
 <span @onkeyup="EnterTabFetchFirstChars">
-<TelerikTextBox @ref="@TxtFirstChars"
-                @bind-Value="@strFirstChars"
-                OnChange="SetUpperOnChange"
-                Placeholder="Enter First Characters of Generator Name"
-                MaxLength="20" Width="20ch" >
-</TelerikTextBox>
+    <TelerikTextBox @ref="@TxtFirstChars"
+                    @bind-Value="@strFirstChars"
+                    OnChange="SetUpperOnChange"
+                    Placeholder="Enter First Characters of Generator Name"
+                    MaxLength="20" Width="20ch">
+    </TelerikTextBox>
 </span>
 
 <TelerikButton OnClick="FetchGenerators">
@@ -21,8 +21,8 @@
 </TelerikButton>
 
 @* Enable Delete Button if there are characters to delete *@
-<TelerikButton Icon="@FontIcon.Cancel" Enabled="@(!string.IsNullOrEmpty(strFirstChars))" 
-    OnClick="DeleteFirstChars">
+<TelerikButton Icon="@FontIcon.Cancel" Enabled="@(!string.IsNullOrEmpty(strFirstChars))"
+               OnClick="DeleteFirstChars">
 </TelerikButton>
 
 <TelerikButton OnClick="AutoFitAllColumns">AutoFit All Columns</TelerikButton>
@@ -32,13 +32,13 @@
 
 @if (lstGenerators != null)
 {
-    <TelerikGrid @ref="@GridRef" 
-        Data="@lstGenerators"
-        Pageable="true"
-        Sortable="true"
-        FilterMode="GridFilterMode.FilterMenu"
-        Resizable="true"
-        Reorderable="true">
+    <TelerikGrid @ref="@GridRef"
+                 Data="@lstGenerators"
+                 Pageable="true"
+                 Sortable="true"
+                 FilterMode="GridFilterMode.FilterMenu"
+                 Resizable="true"
+                 Reorderable="true">
 
         <GridToolBarTemplate>
             <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
@@ -47,29 +47,30 @@
 
         <GridExport>
             <GridExcelExport FileName="@strExcelFileName" AllPages="@blnExportAllPages"
-                OnBeforeExport="@(()=> { strExcelFileName=CreateExcelFileName(); } )" />
+                             OnBeforeExport="@(()=> { strExcelFileName=CreateExcelFileName(); } )" />
         </GridExport>
 
         <GridColumns>
-            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number"/>
-            <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" /> 
+            <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" />
+            <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" />
             <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" />
             <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" />
             <GridColumn Field="@nameof(ModtblGenerator.Province)" Title="Province" />
             <GridColumn Field="@nameof(ModtblGenerator.Country)" Title="Country" />
             <GridColumn Field="@nameof(ModtblGenerator.PostalCode)" Title="Postal Code" />
-            <GridColumn Field="@nameof(ModtblGenerator.WasteClasses)" Title="Waste Classes" Filterable ="false"/>
+            <GridColumn Field="@nameof(ModtblGenerator.WasteClasses)" Title="Waste Classes" Filterable="false" />
         </GridColumns>
     </TelerikGrid>
 }
 else if (blnFetching)
-} 
+{
     <p>Loading...</p>
 }
 else if (blnError)
 {
     <p>Error fetching Generators. Please try again.</p>
 }
+
 
 
 @* Make upper case immediately.  Cannot Bind with Value Changed
