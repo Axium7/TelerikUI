@@ -1,32 +1,30 @@
-﻿@page "/TelerikPractice"
-@* Use Alert dialogs, monitor the console for when the code continues *@
+﻿@page "/"
+@inject SerOHRDatabase serOHRDatabase
 
-<TelerikButton OnClick="@ShowAlert">Show Alert</TelerikButton>
-<TelerikButton OnClick="@ShowAlertWithTitle">Show Alert with Custom Title</TelerikButton>
-<TelerikButton OnClick="@ShowAlertWithTitleAndButton">Show Alert with Custom Title and Custom Button</TelerikButton>
+<TelerikMultiColumnComboBox Data="@lstGenerators"
+                            @bind-Value="@intSelectedGen"
+                            ValueField="@nameof(ModtblGenerator.Id)"
+                            TextField="@nameof(ModtblGenerator.GenNum)"
+                            Width="1000px">
+    <MultiColumnComboBoxColumns>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Num"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)" Title="Gen Name"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.Street)" Title="Street"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.City)" Title="City"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.Province)" Title="Province"></MultiColumnComboBoxColumn>
+        <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.PostalCode)" Title="PostalCode"></MultiColumnComboBoxColumn>
+    </MultiColumnComboBoxColumns>
+</TelerikMultiColumnComboBox>
+
+<p>Selected product Id: @intSelectedGen</p>
 
 @code {
-    [CascadingParameter]
-    private DialogFactory Dialogs { get; set; }
+    private List<ModtblGenerator> lstGenerators;
 
-    private async Task ShowAlert()
+    private int intSelectedGen;
+
+    protected override async Task OnInitializedAsync()
     {
-        await Dialogs.AlertAsync("Something went wrong!");
-
-        Console.WriteLine("The user dismissed the alert box.");
-    }
-
-    private async Task ShowAlertWithTitle()
-    {
-        await Dialogs.AlertAsync("Something went wrong!", "Read this!");
-
-        Console.WriteLine("The user dismissed the alert box with the custom title.");
-    }
-
-    private async Task ShowAlertWithTitleAndButton()
-    {
-        await Dialogs.AlertAsync("Something went wrong!", "Read this!", "DONE");
-
-        Console.WriteLine("The user dismissed the alert box with the custom title and custom button.");
+        lstGenerators = await serOHRDatabase.GetAllGeneratorsAsync();
     }
 }

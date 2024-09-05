@@ -50,5 +50,13 @@ namespace TelerikUI.Services
                 .ToListAsync();
 
         }
+
+        // Get All Generators
+        public async Task<List<ModtblGenerator>> GetAllGeneratorsAsync()
+        {
+            return await _dbContext.Generators
+                                     .Take(1000)
+                                     .ToListAsync();
+        }
     }
 }

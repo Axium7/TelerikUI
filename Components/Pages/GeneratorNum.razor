@@ -1,0 +1,57 @@
+﻿@* @page "/GeneratorNum"
+@inject SerOHRDatabase serOHRDatabase
+@inject Globals serGlobals
+
+<h3>Find Generator by ID</h3>
+
+<input type="number" @bind="strGenNum" placeholder="Enter Generator Number" />
+<button @onclick="FetchGenerator">Get Generator</button>
+
+@if (singleGenerator != null)
+{
+
+    <ComGenerator Generator="singleGenerator" />
+}
+else if (blnFetching)
+{
+    <p>Loading...</p>
+}
+else if (blnError)
+{
+    <p>Error fetching generator. Please try again.</p>
+}
+
+@code {
+
+    [CascadingParameter]
+    private DialogFactory Dialogs { get; set; }
+
+    string strGenNum;
+    ModtblGenerator singleGenerator;
+    bool blnFetching = false;
+    bool blnError = false;
+
+    async Task FetchGenerator()
+    {
+        blnFetching = true;
+        blnError = false;
+        singleGenerator = null;
+
+        try
+        {
+            singleGenerator = await serOHRDatabase.GetGeneratorByIdAsync(intID);
+            if (singleGenerator == null)
+            {
+                await Dialogs.AlertAsync($"Generator ID {intID} does not exist", serGlobals.strAppTitle);
+            }
+        }
+        catch (Exception)
+        {
+            blnError = true;
+        }
+        finally
+        {
+            blnFetching = false;
+        }
+    }
+} *@
