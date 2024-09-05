@@ -7,13 +7,18 @@
              FilterMode="GridFilterMode.FilterMenu"
              Resizable="true"
              Reorderable="true">
-
+    @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
-        <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
-        <label class="k-checkbox-label"><TelerikCheckBox @bind-Value="@blnExportAllPages" />Export All Pages</label>
         
+        @* ******** Excel Button *@
+        <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
+
+        @* ******** AutoFill Button *@
         <TelerikButton OnClick="AutoFitAllColumns" >AutoFit All Columns</TelerikButton>
+
+        @* ******** Clear All filters Button *@
         <TelerikButton ThemeColor="primary" OnClick="@ClearGridFilter">Clear Filters</TelerikButton>
+    
     </GridToolBarTemplate>
 
     <GridExport>
@@ -21,7 +26,9 @@
                          OnBeforeExport="@(()=> { strExcelFileName=CreateExcelFileName(); } )" />
     </GridExport>
 
-    <GridColumns>
+   @*  **************************************** Columns **************************************** *@
+    
+   <GridColumns>
          @* Gen Number is a HyperLink to the Generator Details Page *@
 
         <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number"> 
