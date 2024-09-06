@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/GenName"
 @inject SerOHRDatabase serOHRDatabase
 @using Telerik.DataSource
 @using Telerik.DataSource.Extensions
@@ -11,9 +11,9 @@
                             TextField="@nameof(ModtblGenerator.GenName)"
                             Filterable="true"
                             @bind-Value="@intSelectedGenID"
-                            ItemHeight="@ItemHeight"
-                            ListHeight="@ListHeight"
-                            PageSize="@PageSize"
+                            ItemHeight="260"
+                            ListHeight="28"
+                            PageSize="15"
                             ScrollMode="@DropDownScrollMode.Virtual"
                             OnRead="@ReadItems"
                             ValueMapper="@GetGeneratorRecord"
@@ -48,8 +48,8 @@
     </MultiColumnComboBoxColumns>
 </TelerikMultiColumnComboBox>
 
-<ComGenerator Generator=""/>
-
+@* <ComGenerator Generator="@GetGenerator" />
+ *@
 <p>Selected product Id: @intSelectedGenID</p>
 
 @code {
@@ -57,11 +57,6 @@
     List<ModtblGenerator> lstGenerators;
     int intSelectedGenID;
 
-    public string ListHeight { get; set; } = "260px";
-    public int ItemHeight { get; set; } = 28;
-    public int PageSize { get; set; } = 10;
-    
-    
     protected async Task ReadItems(MultiColumnComboBoxReadEventArgs args)
     {
         await LoadData();
@@ -71,7 +66,6 @@
         args.Total = result.Total;
     }
 
-    // sample Read operation
     private async Task LoadData()
     {
         if (lstGenerators == null)
