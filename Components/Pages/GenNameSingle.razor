@@ -6,6 +6,7 @@
 <div>Generator Name Search:</div>
 
 <TelerikMultiColumnComboBox TItem="ModtblGenerator"
+                            OnRead="@ReadItems"
                             TValue="int"
                             ValueField="@nameof(ModtblGenerator.Id)"
                             TextField="@nameof(ModtblGenerator.GenName)"
@@ -15,9 +16,9 @@
                             ListHeight="28"
                             PageSize="15"
                             ScrollMode="@DropDownScrollMode.Virtual"
-                            OnRead="@ReadItems"
-                            ValueMapper="@GetGeneratorRecord"
-                            Width= "250px">
+                            Width= "250px"
+                            OnChange="@GetItemFromModelData">
+>
 
     <MultiColumnComboBoxColumns>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)"
@@ -48,15 +49,27 @@
     </MultiColumnComboBoxColumns>
 </TelerikMultiColumnComboBox>
 
+@if (selectedGenerator != null)
+{
+	<ComGenerator Generator="@selectedGenerator" />
+}
+
 @* <ComGenerator Generator="@GetGenerator" />
  *@
 <p>Selected product Id: @intSelectedGenID</p>
 
 @code {
-    
+
     List<ModtblGenerator> lstGenerators;
     int intSelectedGenID;
+    ModtblGenerator selectedGenerator;
 
+    private async Task GetItemFromModelData()
+    {
+        selectedGenerator = await serOHRDatabase.GeneratorDeleteByIDAsync(intSelectedGenID);
+    }
+
+    //**************************************** Combo Events
     protected async Task ReadItems(MultiColumnComboBoxReadEventArgs args)
     {
         await LoadData();
@@ -74,10 +87,6 @@
         }
     }
 
-    protected Task<ModtblGenerator> GetGeneratorRecord(int intSelectedGenID)
-    {
-        return Task.FromResult(lstGenerators.FirstOrDefault(x => x.Id == intSelectedGenID));
-    }
 }
 
 <style>
