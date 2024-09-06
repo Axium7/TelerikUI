@@ -64,9 +64,9 @@
     int intSelectedGenID;
     ModtblGenerator selectedGenerator;
 
-    private async Task GetItemFromModelData()
+    private void GetItemFromModelData()
     {
-        selectedGenerator = await serOHRDatabase.GeneratorDeleteByIDAsync(intSelectedGenID);
+        selectedGenerator = Generators
     }
 
     //**************************************** Combo Events
