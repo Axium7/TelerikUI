@@ -4,6 +4,7 @@
 <TelerikGrid @ref="@GridRef"
              Data="Generators"
              Sortable="true"
+             SortMode="@SortMode.Multiple"
              FilterMode="GridFilterMode.FilterMenu"
              Resizable="true"
              Reorderable="true"
@@ -12,19 +13,20 @@
              RowHeight="60"
              ScrollMode="@GridScrollMode.Virtual"
              OnRowRender="@OnRowRender" 
-             OnRowDoubleClick="@OnRowDoubleClickHandler">
-    
+             OnStateInit="@((GridStateEventArgs<ModtblGenerator> args) => OnStateInitHandler(args))"
+>
+   
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
 
         @* ******** Excel Button *@
         <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
 
-        @* ******** AutoFill Button *@
-        <TelerikButton OnClick="AutoFitAllColumns">AutoFit All Columns</TelerikButton>
+        @* ******** Clear All Button *@
+        <TelerikButton ThemeColor="primary" OnClick="@ClearGridFilter">Clear Filters & Sorts</TelerikButton>
 
-        @* ******** Clear All filters Button *@
-        <TelerikButton ThemeColor="primary" OnClick="@ClearGridFilter">Clear Filters</TelerikButton>
+        @* ******** Record Count *@
+        <span class="ml-2">Records: @Generators.Count</span>
 
     </GridToolBarTemplate>
 
@@ -126,6 +128,19 @@
     private void OnRowRender(GridRowRenderEventArgs args)
     {
         args.Class = "custom-ellipsis";
+    }
+
+    async Task OnStateInitHandler(GridStateEventArgs<ModtblGenerator> args)
+    {
+        var state = new GridState<ModtblGenerator>
+        {
+                SortDescriptors = new List<SortDescriptor>
+            {
+                new SortDescriptor{ Member = "GenName", SortDirection = ListSortDirection.Ascending }
+            }
+        };
+
+        args.GridState = state;
     }
 
 }

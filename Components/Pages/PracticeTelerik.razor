@@ -1,69 +1,46 @@
 ﻿@page "/practiceTelerik"
 
-Ellipsis for all columns via OnRowRender.
+@using Telerik.DataSource.Extensions
 
-<TelerikGrid Data="@MyData" Height="300px"
-             Pageable="true" Sortable="true"
-             Resizable="true" Reorderable="true"
-             OnRowDoubleClick="@OnRowDoubleClickHandler" 
-             OnRowRender="@OnRowRender"> @* make all columns have ellipses *@
+<TelerikGrid Data="@GridData"
+             TotalCount="@GridTotal"
+             Sortable="true"
+             FilterMode="@GridFilterMode.FilterRow"
+             Height="460px" RowHeight="60"
+             PageSize="10"
+             ScrollMode="@GridScrollMode.Virtual"
+             OnRead="@OnGridRead">
     <GridColumns>
-        <GridColumn Field="@(nameof(SampleData.Id))" Width="100px" />
-        <GridColumn Field="@(nameof(SampleData.Name))" Title="Employee Name" Width="100px" />
-        <GridColumn Field="@(nameof(SampleData.Team))" Title="Team" Width="100px" />
-        <GridColumn Field="@(nameof(SampleData.Note))" Title="Notes" Width="200px" />
-        <GridColumn Field="@(nameof(SampleData.HireDate))" Title="Hire Date" Width="100px" />
-        <GridColumn Title="Empty Column" />
+        <GridColumn Field="@nameof(Product.ID)" />
+        <GridColumn Field="@nameof(Product.Name)" />
     </GridColumns>
 </TelerikGrid>
 
+<p>
+    Total rows in the Grid: @GridTotal.ToString()
+</p>
+
 @code {
-    private bool WindowIsVisible { get; set; }
+    public List<Product> Data { get; set; }
+    public List<Product> GridData { get; set; }
+    public int GridTotal { get; set; }
 
-    private SampleData CurrEmployee { get; set; } = new SampleData();
-
-    private void OnRowDoubleClickHandler(GridRowClickEventArgs args)
+    protected override void OnInitialized()
     {
-        CurrEmployee = args.Item as SampleData;
-
-        WindowIsVisible = !WindowIsVisible;
-    }
-
-    // apply ellipsis to all columns
-    private void OnRowRender(GridRowRenderEventArgs args)
-    {
-        args.Class = "custom-ellipsis";
-    }
-
-    public IEnumerable<SampleData> MyData = Enumerable.Range(1, 30).Select(x => new SampleData
+        Data = new List<Product>();
+        for (int i = 1; i <= 500; i++)
         {
-            Id = x,
-            Name = "Employee Name " + x,
-            Team = "Team Name " + x % 5,
-            Note = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has... ",
-            HireDate = DateTime.Now.AddDays(-x).Date
-        });
+            Data.Add(new Product()
+            {
+                ID = i,
+                Name = "Product " + i.ToString()
+            });
+        }
+    }
 
-    public class SampleData
+    protected void OnGridRead(GridReadEventArgs args)
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Team { get; set; }
-        public string Note { get; set; }
-        public DateTime HireDate { get; set; }
+        var datasourceResult = Data.ToDataSourceResult(args.Request);
+        GridData = (datasourceResult.Data as IEnumerable<Product>).ToList();
+        GridTotal = datasourceResult.Total;
     }
-}
-
-
-<style>
-    /* template */
-    div.custom-ellipsis,
-    /* OnCellRender */
-    .k-grid td.custom-ellipsis,
-    /* OnRowRender */
-    .k-grid tr.custom-ellipsis .k-table-td {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-</style>
