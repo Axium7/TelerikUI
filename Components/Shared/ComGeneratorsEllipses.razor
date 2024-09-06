@@ -2,27 +2,25 @@
 @using Telerik.DataSource.Extensions
 
 <TelerikGrid @ref="@GridRef"
-             Data="@Generators"
+             OnRead="@OnGridRead"
+             TItem="ModtblGenerator"
              Pageable="true"
              Sortable="true"
              FilterMode="GridFilterMode.FilterMenu"
              Resizable="true"
-             Reorderable="true"
-             OnRowRender="@OnRowRender"
->
-
+             Reorderable="true">
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
-        
+
         @* ******** Excel Button *@
         <GridCommandButton Command="ExcelExport" Icon="@SvgIcon.FileExcel">Export to Excel</GridCommandButton>
 
         @* ******** AutoFill Button *@
-        <TelerikButton OnClick="AutoFitAllColumns" >AutoFit All Columns</TelerikButton>
+        <TelerikButton OnClick="AutoFitAllColumns">AutoFit All Columns</TelerikButton>
 
         @* ******** Clear All filters Button *@
         <TelerikButton ThemeColor="primary" OnClick="@ClearGridFilter">Clear Filters</TelerikButton>
-    
+
     </GridToolBarTemplate>
 
     <GridExport>
@@ -30,12 +28,11 @@
                          OnBeforeExport="@(()=> { strExcelFileName=CreateExcelFileName(); } )" />
     </GridExport>
 
-   @*  **************************************** Columns **************************************** *@
-    
-   <GridColumns>
-         @* Gen Number is a HyperLink to the Generator Details Page *@
-        <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" HeaderClass="header" Class=""/>
-        <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header" class=""/>
+    @*  **************************************** Columns **************************************** *@
+
+    <GridColumns>
+        @* Gen Number is a HyperLink to the Generator Details Page *@
+        <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header" />
         <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" HeaderClass="header" />
         <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" HeaderClass="header" />
         <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" HeaderClass="header" />
@@ -46,18 +43,81 @@
     </GridColumns>
 </TelerikGrid>
 
+@code {
 
+    [Parameter]
+    public List<ModtblGenerator> Generators { get; set; }
+
+    [Parameter]
+    public string FirstChars { get; set; }
+
+    TelerikGrid<ModtblGenerator> GridRef { get; set; }
+
+    string strExcelFileName = "excelfile";
+    bool blnAutoFitFlag = false;
+    bool blnFirstGridBindFlag = true;
+
+    string CreateExcelFileName()
+    {
+        return $"GeneratorSearch_{FirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
+    }
+
+    private async Task AutoFitAllColumns()
+    {
+        if (GridRef != null)
+        {
+            await GridRef.AutoFitAllColumnsAsync();
+        }
+    }
+
+    private async Task ClearGridFilter()
+    {
+        GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
+            {
+                //clears the filter list in the new Grid state
+                FilterDescriptors = new List<IFilterDescriptor>()
+            };
+
+        await GridRef.SetStateAsync(desiredState);
+    }
+
+    private async Task OnGridRead(GridReadEventArgs args)
+    {
+        await Task.Delay(100); // simulate async operation
+        DataSourceResult result = Generators.ToDataSourceResult(args.Request);
+
+        args.Data = result.Data;
+        args.Total = result.Total;
+        args.AggregateResults = result.AggregateResults;
+
+        if (blnFirstGridBindFlag && result.Total > 0)
+        {
+            // it is also possible to auto fit Grid columns on every rebind
+            blnFirstGridBindFlag = false;
+            blnAutoFitFlag = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (blnAutoFitFlag)
+        {
+            blnAutoFitFlag = false;
+            await Task.Delay(1);
+            if (GridRef != null)
+            {
+                await GridRef.AutoFitAllColumnsAsync();
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+}
 
 <style>
     .header {
         font-weight: bold;
         color: black;
     }
-
-    /* OnRowRender */
-    .k-grid tr.custom-ellipsis .k-table-td {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    } */
 </style>
