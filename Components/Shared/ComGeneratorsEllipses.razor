@@ -14,7 +14,7 @@
              ScrollMode="@GridScrollMode.Virtual"
              OnRowRender="@OnRowRender" 
              OnStateInit="@((GridStateEventArgs<ModtblGenerator> args) => OnStateInitHandler(args))"
->
+             OnRead="@OnGridRead">
    
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
@@ -26,7 +26,7 @@
         <TelerikButton ThemeColor="primary" OnClick="@ClearGridFilter">Clear Filters & Sorts</TelerikButton>
 
         @* ******** Record Count *@
-        <span class="ml-2">Records: @Generators.Count</span>
+        <span class="ml-2">Records: @GridData.Total</span>
 
     </GridToolBarTemplate>
 
@@ -60,90 +60,6 @@
         <WindowAction Name="Close"></WindowAction>
     </WindowActions>
 </TelerikWindow>
-
-
-@code {
-
-    [Parameter]
-    public List<ModtblGenerator> Generators { get; set; }
-
-    [Parameter]
-    public string FirstChars { get; set; }
-
-    private ModtblGenerator currentGenerator = new ModtblGenerator();
-
-    private TelerikGrid<ModtblGenerator> GridRef { get; set; }
-
-    private bool blnShowWindowWasteClasses = false;
-
-    private string strExcelFileName = "excelfile";
-
-    //**************************** Methods *************************************
-
-    private void OnRowDoubleClickHandler(GridRowClickEventArgs args)
-    {
-        currentGenerator = args.Item as ModtblGenerator;
-
-        blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
-    }
-
-    string CreateExcelFileName()
-    {
-        return $"GeneratorSearch_{FirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
-    }
-
-    private async Task AutoFitAllColumns()
-    {
-        if (GridRef != null)
-        {
-            await GridRef.AutoFitAllColumnsAsync();
-        }
-    }
-
-    private async Task ClearGridFilter()
-    {
-        GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
-            {
-                //clears the filter list in the new Grid state
-                FilterDescriptors = new List<IFilterDescriptor>()
-            };
-
-        await GridRef.SetStateAsync(desiredState);
-    }
-
-    private async Task OnGridRead(GridReadEventArgs args)
-    {
-        await Task.Delay(100); // simulate async operation
-        DataSourceResult result = Generators.ToDataSourceResult(args.Request);
-
-        args.Data = result.Data;
-        args.Total = result.Total;
-        args.AggregateResults = result.AggregateResults;
-
-    }
-
-    // **************************** Grid Styling ****************************
-
-    // apply ellipsis to all columns
-    private void OnRowRender(GridRowRenderEventArgs args)
-    {
-        args.Class = "custom-ellipsis";
-    }
-
-    async Task OnStateInitHandler(GridStateEventArgs<ModtblGenerator> args)
-    {
-        var state = new GridState<ModtblGenerator>
-        {
-                SortDescriptors = new List<SortDescriptor>
-            {
-                new SortDescriptor{ Member = "GenName", SortDirection = ListSortDirection.Ascending }
-            }
-        };
-
-        args.GridState = state;
-    }
-
-}
 
 <style>
     .header {
