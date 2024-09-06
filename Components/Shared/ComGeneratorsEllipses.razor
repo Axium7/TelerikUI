@@ -9,8 +9,8 @@
              FilterMode="GridFilterMode.FilterMenu"
              Resizable="true"
              Reorderable="true"
-             OnRowRender="@OnRowRender"
->
+             OnRowRender="@OnRowRender" 
+             OnRowDoubleClick="@OnRowDoubleClickHandler">  @* Show WasteClasses on Double Click *@
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
 
@@ -44,6 +44,21 @@
     </GridColumns>
 </TelerikGrid>
 
+<TelerikWindow @bind-Visible="@blnShowWindowWasteClasses" Modal="true">
+    <WindowTitle>
+        <strong>Details for @currentGenerator.GenName</strong>
+    </WindowTitle>
+    <WindowContent>
+        @currentGenerator.WasteClasses
+    </WindowContent>
+    <WindowActions>
+        <WindowAction Name="Minimize"></WindowAction>
+        <WindowAction Name="Maximize"></WindowAction>
+        <WindowAction Name="Close"></WindowAction>
+    </WindowActions>
+</TelerikWindow>
+
+
 @code {
 
     [Parameter]
@@ -52,9 +67,22 @@
     [Parameter]
     public string FirstChars { get; set; }
 
-    TelerikGrid<ModtblGenerator> GridRef { get; set; }
+    private ModtblGenerator currentGenerator = new ModtblGenerator();
 
-    string strExcelFileName = "excelfile";
+    private TelerikGrid<ModtblGenerator> GridRef { get; set; }
+
+    private bool blnShowWindowWasteClasses = false;
+
+    private string strExcelFileName = "excelfile";
+
+    //**************************** Methods *************************************
+
+    private void OnRowDoubleClickHandler(GridRowClickEventArgs args)
+    {
+        currentGenerator = args.Item as ModtblGenerator;
+
+        blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
+    }
 
     string CreateExcelFileName()
     {

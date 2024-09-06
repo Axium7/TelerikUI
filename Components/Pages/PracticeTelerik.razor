@@ -5,8 +5,8 @@ Ellipsis for all columns via OnRowRender.
 <TelerikGrid Data="@MyData" Height="300px"
              Pageable="true" Sortable="true"
              Resizable="true" Reorderable="true"
-             OnRowDoubleClick="@OnRowDoubleClickHandler"
-             OnRowRender="@OnRowRender">
+             OnRowDoubleClick="@OnRowDoubleClickHandler" 
+             OnRowRender="@OnRowRender"> @* make all columns have ellipses *@
     <GridColumns>
         <GridColumn Field="@(nameof(SampleData.Id))" Width="100px" />
         <GridColumn Field="@(nameof(SampleData.Name))" Title="Employee Name" Width="100px" />
