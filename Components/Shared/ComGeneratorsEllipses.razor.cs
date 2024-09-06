@@ -78,9 +78,9 @@ namespace TelerikUI.Components.Shared
             args.GridState = state;
         }
 
-        private void OnRowDoubleClickHandler(GridRowClickEventArgs args)
+        private void ShowWindowWasteClasses(ModtblGenerator generator)
         {
-            currentGenerator = args.Item as ModtblGenerator;
+            currentGenerator = generator;
 
             blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
         }
