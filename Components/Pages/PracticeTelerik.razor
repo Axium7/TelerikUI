@@ -1,9 +1,9 @@
 ﻿@page "/practiceTelerik"
 
 @using Telerik.DataSource.Extensions
+@using Telerik.DataSource;
 
 <TelerikGrid Data="@GridData"
-             TotalCount="@GridTotal"
              Sortable="true"
              FilterMode="@GridFilterMode.FilterRow"
              Height="460px" RowHeight="60"
@@ -31,10 +31,10 @@
         for (int i = 1; i <= 500; i++)
         {
             Data.Add(new Product()
-            {
-                ID = i,
-                Name = "Product " + i.ToString()
-            });
+                {
+                    ID = i,
+                    Name = "Product " + i.ToString()
+                });
         }
     }
 
@@ -44,3 +44,10 @@
         GridData = (datasourceResult.Data as IEnumerable<Product>).ToList();
         GridTotal = datasourceResult.Total;
     }
+
+    public class Product
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+}
