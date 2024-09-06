@@ -30,16 +30,8 @@
     
    <GridColumns>
          @* Gen Number is a HyperLink to the Generator Details Page *@
-
-        <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number"> 
-            @* <Template>
-                @{
-                    var generator = context as ModtblGenerator;
-                    @((MarkupString)$"<a href=\"http://mysite.com/employee/{generator.Id}\" target=\"_blank\">{employee.Name}</a>")
-                }
-            </Template> *@
-        </GridColumn>
         <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" />
+        <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number"/> 
         <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" />
         <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" />
         <GridColumn Field="@nameof(ModtblGenerator.Province)" Title="Province" />
