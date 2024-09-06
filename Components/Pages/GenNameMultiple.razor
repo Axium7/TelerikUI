@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/GenNameMultiple"
 @inject SerOHRDatabase serOHRDatabase
 @using Microsoft.AspNetCore.Components.Web
 @* This library is for Lists *@
@@ -30,7 +30,7 @@
 
 @if (lstGenerators != null)
 {
-    <ComGenerators Generators="@lstGenerators" FirstChars="strFirstChars"/>
+    <ComGeneratorsEllipses Generators="@lstGenerators" FirstChars="strFirstChars"/>
 }
 else if (blnFetching)
 {
