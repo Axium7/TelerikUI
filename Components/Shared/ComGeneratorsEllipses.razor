@@ -2,15 +2,18 @@
 @using Telerik.DataSource.Extensions
 
 <TelerikGrid @ref="@GridRef"
-             OnRead="@OnGridRead"
-             TItem="ModtblGenerator"
-             Pageable="true"
+             Data="Generators"
              Sortable="true"
              FilterMode="GridFilterMode.FilterMenu"
              Resizable="true"
              Reorderable="true"
+             Height="460px" 
+             PageSize="25"
+             RowHeight="60"
+             ScrollMode="@GridScrollMode.Virtual"
              OnRowRender="@OnRowRender" 
-             OnRowDoubleClick="@OnRowDoubleClickHandler">  @* Show WasteClasses on Double Click *@
+             OnRowDoubleClick="@OnRowDoubleClickHandler">
+    
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
 
@@ -46,14 +49,12 @@
 
 <TelerikWindow @bind-Visible="@blnShowWindowWasteClasses" Modal="true">
     <WindowTitle>
-        <strong>Details for @currentGenerator.GenName</strong>
+        <strong>@currentGenerator.GenName</strong>
     </WindowTitle>
     <WindowContent>
         @currentGenerator.WasteClasses
     </WindowContent>
     <WindowActions>
-        <WindowAction Name="Minimize"></WindowAction>
-        <WindowAction Name="Maximize"></WindowAction>
         <WindowAction Name="Close"></WindowAction>
     </WindowActions>
 </TelerikWindow>
