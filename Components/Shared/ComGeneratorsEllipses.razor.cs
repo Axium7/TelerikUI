@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Telerik.Blazor.Components;
 using Telerik.DataSource;
 using Telerik.DataSource.Extensions;
+using Telerik.SvgIcons;
 using TelerikUI.Models;
 
 namespace TelerikUI.Components.Shared
@@ -84,10 +86,21 @@ namespace TelerikUI.Components.Shared
 
             blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
         }
-        private void GoToPageGenSingle(ModtblGenerator generator)
+        
+        //New Tab
+        private async Task GoToPageGenSingle(ModtblGenerator generator)
         {
-            //Navigate to the GenSingle Page
-            NavigationManager.NavigateTo("/GenSingle",true);
+            //var url = $"/GenSingle/{generator.Id}";
+            await JS.InvokeVoidAsync("open", "/GenSingle", "_blank");
         }
+
+        //Same Tab
+        //private void GoToPageGenSingle(ModtblGenerator generator)
+        //{
+        //    //Navigate to the GenSingle Page
+        //    NavigationManager.NavigateTo("/GenSingle",true);
+
+        //}
+
     }
 }

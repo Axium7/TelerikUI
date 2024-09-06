@@ -1,6 +1,7 @@
 ﻿@using Telerik.DataSource;
 @using Telerik.DataSource.Extensions
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
 <TelerikGrid @ref="@GridRef"
              TItem="ModtblGenerator" 
@@ -38,8 +39,9 @@
     </GridExport>
 
     @*  **************************************** Columns **************************************** *@
-
+    
     <GridColumns>
+    @* <GridColumn Field="@nameof(ModtblGenerator.Id)" Title="ID" HeaderClass="header" /> *@
     <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header">
         <Template>
                 @{
@@ -64,6 +66,8 @@
     </GridColumn>
     </GridColumns>
 </TelerikGrid>
+
+
 
 <TelerikWindow @bind-Visible="@blnShowWindowWasteClasses" Modal="true">
     <WindowTitle>
