@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
 using Telerik.DataSource;
-using TelerikUI.Models;
 using Telerik.DataSource.Extensions;
+using TelerikUI.Models;
 
 namespace TelerikUI.Components.Shared
 {
@@ -25,26 +25,11 @@ namespace TelerikUI.Components.Shared
 
         private string strExcelFileName = "excelfile";
 
-        //**************************** Methods *************************************
-
-        private void OnRowDoubleClickHandler(GridRowClickEventArgs args)
-        {
-            currentGenerator = args.Item as ModtblGenerator;
-
-            blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
-        }
+        //**************************** Custom Methods *************************************
 
         string CreateExcelFileName()
         {
             return $"GeneratorSearch_{FirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
-        }
-
-        private async Task AutoFitAllColumns()
-        {
-            if (GridRef != null)
-            {
-                await GridRef.AutoFitAllColumnsAsync();
-            }
         }
 
         private async Task ClearGridFilter()
@@ -52,14 +37,26 @@ namespace TelerikUI.Components.Shared
             GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
             {
                 //clears the filter list in the new Grid state
-                FilterDescriptors = new List<IFilterDescriptor>()
+                FilterDescriptors = new List<IFilterDescriptor>(),
+
+                //Sets the default sort order
+                SortDescriptors = new List<SortDescriptor>
+                {
+                    new SortDescriptor{ Member = "GenName", SortDirection = ListSortDirection.Ascending }
+                }
 
             };
 
             await GridRef.SetStateAsync(desiredState);
         }
-        
+
         // **************************** Grid Events ****************************
+        protected void ReadItems(GridReadEventArgs args)
+        {
+            GridData = Generators.ToDataSourceResult(args.Request);
+            args.Data = GridData.Data;
+            args.Total = GridData.Total;
+        }
 
         // apply ellipsis to all columns
         private void OnRowRender(GridRowRenderEventArgs args)
@@ -73,17 +70,19 @@ namespace TelerikUI.Components.Shared
             var state = new GridState<ModtblGenerator>
             {
                 SortDescriptors = new List<SortDescriptor>
-            {
-                new SortDescriptor{ Member = "GenName", SortDirection = ListSortDirection.Ascending }
-            }
+                {
+                    new SortDescriptor{ Member = "GenName", SortDirection = ListSortDirection.Ascending }
+                }
             };
 
             args.GridState = state;
         }
 
-        protected void OnGridRead(GridReadEventArgs args)
+        private void OnRowDoubleClickHandler(GridRowClickEventArgs args)
         {
-            GridData = Generators.ToDataSourceResult(args.Request);
+            currentGenerator = args.Item as ModtblGenerator;
+
+            blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
         }
     }
 }

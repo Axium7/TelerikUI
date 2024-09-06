@@ -2,7 +2,8 @@
 @using Telerik.DataSource.Extensions
 
 <TelerikGrid @ref="@GridRef"
-             Data="Generators"
+             TItem="ModtblGenerator" 
+             OnRead="@ReadItems"
              Sortable="true"
              SortMode="@SortMode.Multiple"
              FilterMode="GridFilterMode.FilterMenu"
@@ -14,8 +15,8 @@
              ScrollMode="@GridScrollMode.Virtual"
              OnRowRender="@OnRowRender" 
              OnStateInit="@((GridStateEventArgs<ModtblGenerator> args) => OnStateInitHandler(args))"
-             OnRead="@OnGridRead">
-   
+             OnRowDoubleClick="@OnRowDoubleClickHandler"
+>   
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
 
