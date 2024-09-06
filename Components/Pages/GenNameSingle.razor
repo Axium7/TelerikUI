@@ -12,14 +12,13 @@
                             TextField="@nameof(ModtblGenerator.GenName)"
                             Filterable="true"
                             @bind-Value="@intSelectedGenID"
-                            ItemHeight="260"
-                            ListHeight="28"
-                            PageSize="15"
+                            ItemHeight="@ItemHeight"
+                            ListHeight="@ListHeight"
+                            PageSize="@PageSize"
                             ScrollMode="@DropDownScrollMode.Virtual"
                             Width= "250px"
                             OnChange="@GetSelectedGeneratorRecord"
 >
-
     <MultiColumnComboBoxColumns>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)"
                                    Title="Gen Name"
@@ -51,7 +50,7 @@
 
 @if (selectedGenerator != null)
 {
-	@* <ComGenerator Generator="@selectedGenerator" /> *@
+	<ComGenerator Generator="@selectedGenerator" />
 }
 
 @* <ComGenerator Generator="@GetGenerator" />
@@ -63,6 +62,9 @@
     List<ModtblGenerator> lstGenerators;
     int intSelectedGenID;
     ModtblGenerator selectedGenerator;
+    public string ListHeight { get; set; } = "520px";
+    public int ItemHeight { get; set; } = 28;
+    public int PageSize { get; set; } = 25;
 
     private void GetSelectedGeneratorRecord()
     {
@@ -86,7 +88,6 @@
             lstGenerators = await serOHRDatabase.GetAllGenerators();
         }
     }
-
 }
 
 <style>
