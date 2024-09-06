@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.JSInterop;
+using System.Reflection.Emit;
 using Telerik.Blazor.Components;
 using Telerik.DataSource;
 using Telerik.DataSource.Extensions;
@@ -33,7 +35,16 @@ namespace TelerikUI.Components.Shared
         {
             return $"GeneratorSearch_{FirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
         }
+        private async Task FilterCity(ModtblGenerator generator)
+        {
+            GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
+            {
+                //clears the filter list in the new Grid state
+                FilterDescriptors = new List<IFilterDescriptor>()
+            };
 
+            await GridRef.SetStateAsync(desiredState);
+        }
         private async Task ClearGridFilter()
         {
             GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
