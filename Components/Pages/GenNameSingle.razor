@@ -17,7 +17,7 @@
                             PageSize="15"
                             ScrollMode="@DropDownScrollMode.Virtual"
                             Width= "250px"
-                            OnChange="@GetItemFromModelData">
+                            OnChange="@GetSelectedGeneratorRecord"
 >
 
     <MultiColumnComboBoxColumns>
@@ -64,9 +64,9 @@
     int intSelectedGenID;
     ModtblGenerator selectedGenerator;
 
-    private void GetItemFromModelData()
+    private void GetSelectedGeneratorRecord()
     {
-        selectedGenerator = Generators
+        selectedGenerator = lstGenerators.Find(x => x.Id == intSelectedGenID);
     }
 
     //**************************************** Combo Events
