@@ -1,5 +1,6 @@
 ﻿@using Telerik.DataSource;
 @using Telerik.DataSource.Extensions
+@inject NavigationManager NavigationManager
 
 <TelerikGrid @ref="@GridRef"
              TItem="ModtblGenerator" 
@@ -39,7 +40,15 @@
     @*  **************************************** Columns **************************************** *@
 
     <GridColumns>
-    <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header" />
+    <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header">
+        <Template>
+                @{
+                    var generator = context as ModtblGenerator;
+                }
+                <TelerikButton Icon="@SvgIcon.Search" OnClick="@(() => GoToPageGenSingle(generator))" ></TelerikButton>
+                    <span>@generator.GenName</span>
+            </Template>
+        </GridColumn>
     <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" HeaderClass="header" />
     <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" HeaderClass="header" />
     <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" HeaderClass="header" />
@@ -49,7 +58,7 @@
             @{
                 var generator = context as ModtblGenerator;
             }
-            <TelerikButton OnClick="@(() => ShowWindowWasteClasses(generator))" Class="ml-2">View</TelerikButton>
+            <TelerikButton Icon="@SvgIcon.Search" OnClick="@(() => ShowWindowWasteClasses(generator))" ></TelerikButton>
             <span>@generator.WasteClasses</span>
         </Template>
     </GridColumn>

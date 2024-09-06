@@ -84,5 +84,10 @@ namespace TelerikUI.Components.Shared
 
             blnShowWindowWasteClasses = !blnShowWindowWasteClasses;
         }
+        private void GoToPageGenSingle(ModtblGenerator generator)
+        {
+            //Navigate to the GenSingle Page
+            NavigationManager.NavigateTo("/GenSingle",true);
+        }
     }
 }
