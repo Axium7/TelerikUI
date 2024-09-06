@@ -8,7 +8,9 @@
              Sortable="true"
              FilterMode="GridFilterMode.FilterMenu"
              Resizable="true"
-             Reorderable="true">
+             Reorderable="true"
+             OnRowRender="@OnRowRender"
+>
     @*  **************************************** Tool Bar **************************************** *@
     <GridToolBarTemplate>
 
@@ -98,19 +100,25 @@
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (blnAutoFitFlag)
-        {
-            blnAutoFitFlag = false;
-            await Task.Delay(1);
-            if (GridRef != null)
-            {
-                await GridRef.AutoFitAllColumnsAsync();
-            }
-        }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (blnAutoFitFlag)
+    //     {
+    //         blnAutoFitFlag = false;
+    //         await Task.Delay(1);
+    //         if (GridRef != null)
+    //         {
+    //             await GridRef.AutoFitAllColumnsAsync();
+    //         }
+    //     }
 
-        await base.OnAfterRenderAsync(firstRender);
+    //     await base.OnAfterRenderAsync(firstRender);
+    // }
+
+    // apply ellipsis to all columns
+    private void OnRowRender(GridRowRenderEventArgs args)
+    {
+        args.Class = "custom-ellipsis";
     }
 
 }
@@ -119,5 +127,11 @@
     .header {
         font-weight: bold;
         color: black;
+    }
+    /* OnRowRender */
+    .k-grid tr.custom-ellipsis .k-table-td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style>
