@@ -12,9 +12,9 @@
                             TextField="@nameof(ModtblGenerator.GenName)"
                             Filterable="true"
                             @bind-Value="@intSelectedGenID"
-                            ItemHeight="@ItemHeight"
-                            ListHeight="@ListHeight"
-                            PageSize="@PageSize"
+                            ItemHeight="28"
+                            ListHeight="520px"
+                            PageSize="25"
                             ScrollMode="@DropDownScrollMode.Virtual"
                             Width= "250px"
                             OnChange="@GetSelectedGeneratorRecord"
@@ -62,10 +62,7 @@
     List<ModtblGenerator> lstGenerators;
     int intSelectedGenID;
     ModtblGenerator selectedGenerator;
-    public string ListHeight { get; set; } = "520px";
-    public int ItemHeight { get; set; } = 28;
-    public int PageSize { get; set; } = 25;
-
+   
     private void GetSelectedGeneratorRecord()
     {
         selectedGenerator = lstGenerators.Find(x => x.Id == intSelectedGenID);
