@@ -3,28 +3,28 @@
 @using Telerik.DataSource
 @using Telerik.DataSource.Extensions
 
-<span>
-    Generator Name Search:
-</span>
+<div>Generator Name Search:</div>
+
 <TelerikMultiColumnComboBox TItem="ModtblGenerator"
                             TValue="int"
                             ValueField="@nameof(ModtblGenerator.Id)"
                             TextField="@nameof(ModtblGenerator.GenName)"
-                            Filterable="false"
+                            Filterable="true"
                             @bind-Value="@intSelectedGenID"
                             ItemHeight="@ItemHeight"
                             ListHeight="@ListHeight"
                             PageSize="@PageSize"
                             ScrollMode="@DropDownScrollMode.Virtual"
                             OnRead="@ReadItems"
-                            ValueMapper="@GetGeneratorRecord">
+                            ValueMapper="@GetGeneratorRecord"
+                            Width= "250px">
 
     <MultiColumnComboBoxColumns>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenName)"
                                    Title="Gen Name"
                                    HeaderClass="header"
                                    Class="genNameCell"
-                                   Width="200px"></MultiColumnComboBoxColumn>
+                                   Width="250px"></MultiColumnComboBoxColumn>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.GenNum)"
                                    Title="Gen Num"
                                    HeaderClass="header"
@@ -42,9 +42,9 @@
                                    HeaderClass="header"
                                    Width="150px"></MultiColumnComboBoxColumn>
         <MultiColumnComboBoxColumn Field="@nameof(ModtblGenerator.PostalCode)"
-                                   Title="PostalCode"
+                                   Title="Postal Code"
                                    HeaderClass="header"
-                                   Width="150px"></MultiColumnComboBoxColumn>
+                                   Width="100px"></MultiColumnComboBoxColumn>
     </MultiColumnComboBoxColumns>
 </TelerikMultiColumnComboBox>
 
