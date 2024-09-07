@@ -28,7 +28,7 @@ namespace TelerikUI.Components.Shared
         private bool blnShowWindowWasteClasses = false;
 
         private string strExcelFileName = "excelfile";
-
+        
         //**************************** Custom Methods *************************************
 
         string CreateExcelFileName()
@@ -39,12 +39,21 @@ namespace TelerikUI.Components.Shared
         {
             GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
             {
-                //clears the filter list in the new Grid state
-                FilterDescriptors = new List<IFilterDescriptor>()
-            };
+                // Clears the filter list in the new Grid state
+                FilterDescriptors = new List<IFilterDescriptor>
+                {
+                    new Telerik.DataSource.FilterDescriptor()
+                        {
+                            Member = "City",            // The field to filter
+                            Operator = FilterOperator.IsEqualTo,  // The filter operator
+                            Value = generator.City       // The value to filter by
+                        }
 
+                }
+            };
             await GridRef.SetStateAsync(desiredState);
         }
+
         private async Task ClearGridFilter()
         {
             GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()

@@ -58,7 +58,7 @@
             @{
                 var generator = context as ModtblGenerator;
             }
-            <span @ondoubleclick="@(() => FilterCity(generator))">
+                <span @ondblclick="@(() => FilterCity(generator))">
                 @generator.City
             </span>
         </Template>
