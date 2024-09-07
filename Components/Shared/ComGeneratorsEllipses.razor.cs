@@ -37,20 +37,24 @@ namespace TelerikUI.Components.Shared
         }
         private async Task FilterCity(ModtblGenerator generator)
         {
-            GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
-            {
-                // Clears the filter list in the new Grid state
-                FilterDescriptors = new List<IFilterDescriptor>
-                {
-                    new Telerik.DataSource.FilterDescriptor()
-                        {
-                            Member = "City",            // The field to filter
-                            Operator = FilterOperator.IsEqualTo,  // The filter operator
-                            Value = generator.City       // The value to filter by
-                        }
+            // Get the current state of the grid
+            GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>();
 
-                }
-            };
+            // If there are no filters, initialize the list
+            if (desiredState.FilterDescriptors == null)
+            {
+                desiredState.FilterDescriptors = new List<IFilterDescriptor>();
+            }
+
+            // Add the new filter to the list
+            desiredState.FilterDescriptors.Add(new Telerik.DataSource.FilterDescriptor()
+            {
+                Member = "City",                   // The field to filter
+                Operator = FilterOperator.IsEqualTo,  // The filter operator
+                Value = generator.City              // The value to filter by
+            });
+
+            // Apply the updated state with the new filter
             await GridRef.SetStateAsync(desiredState);
         }
 
