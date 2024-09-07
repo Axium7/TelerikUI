@@ -35,7 +35,7 @@ namespace TelerikUI.Components.Shared
         {
             return $"GeneratorSearch_{FirstChars}_{DateTime.Now.ToString("MMMM_dd_yyyy")}";
         }
-        private async Task FilterCity(ModtblGenerator generator)
+        private async Task FilterField(ModtblGenerator generator, string strMember)
         {
             // Get the current state of the grid
             GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>();
@@ -45,14 +45,18 @@ namespace TelerikUI.Components.Shared
             {
                 desiredState.FilterDescriptors = new List<IFilterDescriptor>();
             }
+            var fieldValue = generator.GetType().GetProperty(strMember)?.GetValue(generator);
 
-            // Add the new filter to the list
-            desiredState.FilterDescriptors.Add(new Telerik.DataSource.FilterDescriptor()
+            if (fieldValue != null)
             {
-                Member = "City",                   // The field to filter
-                Operator = FilterOperator.IsEqualTo,  // The filter operator
-                Value = generator.City              // The value to filter by
-            });
+                // Add the new filter to the list
+                desiredState.FilterDescriptors.Add(new Telerik.DataSource.FilterDescriptor()
+                {
+                    Member = strMember,                   // The field to filter
+                    Operator = FilterOperator.IsEqualTo,  // The filter operator
+                    Value = fieldValue              // The value to filter by
+                });
+            }
 
             // Apply the updated state with the new filter
             await GridRef.SetStateAsync(desiredState);

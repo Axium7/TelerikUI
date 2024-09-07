@@ -42,6 +42,7 @@
     
     <GridColumns>
     @* <GridColumn Field="@nameof(ModtblGenerator.Id)" Title="ID" HeaderClass="header" /> *@
+    
     <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header">
         <Template>
                 @{
@@ -51,19 +52,32 @@
                     <span>@generator.GenName</span>
             </Template>
         </GridColumn>
+    
     <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" HeaderClass="header" />
+    
     <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" HeaderClass="header" />
+    
     <GridColumn Field="@nameof(ModtblGenerator.City)" Title="City" HeaderClass="header">
         <Template>
             @{
                 var generator = context as ModtblGenerator;
             }
-                <span @ondblclick="@(() => FilterCity(generator))">
+                <span @ondblclick="@(() => FilterField(generator, "City"))">
                 @generator.City
             </span>
         </Template>
     </GridColumn>
-    <GridColumn Field="@nameof(ModtblGenerator.Province)" Title="Province" HeaderClass="header"/>
+    
+    <GridColumn Field="@nameof(ModtblGenerator.Province)" Title="Province" HeaderClass="header">
+        <Template>
+            @{
+                var generator = context as ModtblGenerator;
+            }
+                <span @ondblclick="@(() => FilterField(generator, "Province"))">
+                @generator.Province
+            </span>
+        </Template>
+    </GridColumn>
     <GridColumn Title="Waste Classes" HeaderClass="header" Filterable="false">
         <Template>
             @{
