@@ -45,14 +45,16 @@
     
     <GridColumn Field="@nameof(ModtblGenerator.GenName)" Title="Generator Name" HeaderClass="header">
         <Template>
-                @{
-                    var generator = context as ModtblGenerator;
-                }
+            @{
+                var generator = context as ModtblGenerator;
+            }
+            <span @ondblclick="@(() => FilterField(generator, "GenName"))">
                 <TelerikButton Icon="@SvgIcon.Search" OnClick="@(() => GoToPageGenSingle(generator))" ></TelerikButton>
-                    <span>@generator.GenName</span>
-            </Template>
-        </GridColumn>
-    
+                <span>@generator.GenName</span>
+            </span>
+        </Template>
+    </GridColumn>
+
     <GridColumn Field="@nameof(ModtblGenerator.GenNum)" Title="Gen Number" HeaderClass="header" />
     
     <GridColumn Field="@nameof(ModtblGenerator.Street)" Title="Street" HeaderClass="header" />
@@ -62,7 +64,7 @@
             @{
                 var generator = context as ModtblGenerator;
             }
-                <span @ondblclick="@(() => FilterField(generator, "City"))">
+            <span @ondblclick="@(() => FilterField(generator, "City"))">
                 @generator.City
             </span>
         </Template>
@@ -73,7 +75,7 @@
             @{
                 var generator = context as ModtblGenerator;
             }
-                <span @ondblclick="@(() => FilterField(generator, "Province"))">
+            <span @ondblclick="@(() => FilterField(generator, "Province"))">
                 @generator.Province
             </span>
         </Template>

@@ -67,7 +67,7 @@ namespace TelerikUI.Components.Shared
             GridState<ModtblGenerator> desiredState = new GridState<ModtblGenerator>()
             {
                 //clears the filter list in the new Grid state
-                FilterDescriptors = new List<IFilterDescriptor>(),
+                FilterDescriptors = null,
 
                 //Sets the default sort order
                 SortDescriptors = new List<SortDescriptor>
